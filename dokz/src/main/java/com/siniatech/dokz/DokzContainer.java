@@ -21,7 +21,7 @@ import com.siniatech.siniautils.swing.IAmJComponent;
 public class DokzContainer implements IAmJComponent {
 
     private JPanel container;
-    private Map<DokzPanel, DokzPanelContext> panels = new HashMap<DokzPanel, DokzPanelContext>();
+    private Map<DokzPanel, DokzPanelContext> panels = new HashMap<>();
 
     public DokzContainer() {
         container = new JPanel();
@@ -117,7 +117,7 @@ public class DokzContainer implements IAmJComponent {
     }
 
     public List<JMenuItem> getPanelStateMenuItems() {
-        List<JMenuItem> panelStateMenuItems = new ArrayList<JMenuItem>();
+        List<JMenuItem> panelStateMenuItems = new ArrayList<>();
         for ( DokzPanelContext dokzPanelContext : panels.values() ) {
             panelStateMenuItems.add( dokzPanelContext.getPanelStateMenuItem() );
         }
