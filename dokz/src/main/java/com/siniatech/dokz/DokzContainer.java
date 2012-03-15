@@ -1,17 +1,12 @@
 package com.siniatech.dokz;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
@@ -30,13 +25,10 @@ public class DokzContainer implements IAmJComponent {
 
     JComponent createButtonBarFor( final DokzPanel dokzPanel, String title ) {
         assert panels.keySet().contains( dokzPanel );
-        JButton min = new JButton( "Min" );
-        JButton max = new JButton( "Max" );
-        JButton close = new JButton( "Close" );
 
-        max.addActionListener( new AbstractAction() {
+        IResponse0 onMax = new IResponse0() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void respond() {
                 DokzPanelContext context = panels.get( dokzPanel );
                 if ( context.getState() == DokzPanelState.open ) {
                     context.setState( DokzPanelState.maxed );
@@ -56,27 +48,20 @@ public class DokzContainer implements IAmJComponent {
                 }
                 container.revalidate();
             }
-        } );
-        close.addActionListener( new AbstractAction() {
+        };
+        IResponse0 onClose = new IResponse0() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void respond() {
                 close( dokzPanel );
             }
-
-        } );
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add( min );
-        buttonPanel.add( max );
-        buttonPanel.add( close );
-
-        JPanel buttonBar = new JPanel( new BorderLayout() );
-        buttonBar.add( buttonPanel, BorderLayout.EAST );
-
-        if ( title != null && title.length() > 0 ) {
-            buttonBar.add( new JLabel( title ), BorderLayout.WEST );
-        }
-        return buttonBar;
+        };
+        IResponse0 onMin = new IResponse0() {
+            @Override
+            public void respond() {
+                System.out.println( "MIN" );
+            }
+        };
+        return new DokzButtonBar( title, onMin, onMax, onClose );
     }
 
     @Override
