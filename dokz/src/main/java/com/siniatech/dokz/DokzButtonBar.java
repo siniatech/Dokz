@@ -19,9 +19,10 @@ import com.siniatech.siniautils.fn.IResponse0;
 public class DokzButtonBar extends JComponent {
 
     public DokzButtonBar( String title, final IResponse0 onMin, final IResponse0 onMax, final IResponse0 onClose ) {
-        JButton min = new JButton( "Min" );
-        JButton max = new JButton( "Max" );
-        JButton close = new JButton( "Close" );
+        
+        JButton min = new DokzButton( this.getClass().getResource( "icons/min.png" ) );
+        JButton max = new DokzButton( this.getClass().getResource( "icons/max.png" ) );
+        JButton close = new DokzButton( this.getClass().getResource( "icons/close.png" ) );
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque( false );
@@ -58,7 +59,7 @@ public class DokzButtonBar extends JComponent {
             }
         } );
 
-        setLayout( new BorderLayout() );
+        setLayout(  );
         add( buttonBar, BorderLayout.CENTER );
     }
 
