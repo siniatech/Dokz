@@ -22,9 +22,9 @@ public class DokzButtonBar extends JComponent {
     private JLabel label;
 
     public DokzButtonBar( String title, final IResponse0 onMin, final IResponse0 onMax, final IResponse0 onClose ) {
-        min = new DokzButton( this.getClass().getResource( "icons/min.png" ) );
-        max = new DokzButton( this.getClass().getResource( "icons/max.png" ) );
-        close = new DokzButton( this.getClass().getResource( "icons/close.png" ) );
+        min = new DokzButton( this.getClass().getResource( "icons/min.png" ), this.getClass().getResource( "icons/minOver.png" ) );
+        max = new DokzButton( this.getClass().getResource( "icons/max.png" ), this.getClass().getResource( "icons/maxOver.png" ) );
+        close = new DokzButton( this.getClass().getResource( "icons/close.png" ), this.getClass().getResource( "icons/closeOver.png" ) );
         add( min );
         add( max );
         add( close );
