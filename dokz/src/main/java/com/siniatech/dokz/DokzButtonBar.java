@@ -1,6 +1,5 @@
 package com.siniatech.dokz;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,35 +8,31 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import com.siniatech.siniautils.fn.IResponse0;
 
 public class DokzButtonBar extends JComponent {
 
+    private DokzButton min;
+    private DokzButton max;
+    private DokzButton close;
+    private JLabel label;
+
     public DokzButtonBar( String title, final IResponse0 onMin, final IResponse0 onMax, final IResponse0 onClose ) {
-        
-        JButton min = new DokzButton( this.getClass().getResource( "icons/min.png" ) );
-        JButton max = new DokzButton( this.getClass().getResource( "icons/max.png" ) );
-        JButton close = new DokzButton( this.getClass().getResource( "icons/close.png" ) );
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque( false );
-        buttonPanel.add( min );
-        buttonPanel.add( max );
-        buttonPanel.add( close );
-
-        JPanel buttonBar = new JPanel( new BorderLayout() );
-        buttonBar.setOpaque( false );
-        buttonBar.add( buttonPanel, BorderLayout.EAST );
+        min = new DokzButton( this.getClass().getResource( "icons/min.png" ) );
+        max = new DokzButton( this.getClass().getResource( "icons/max.png" ) );
+        close = new DokzButton( this.getClass().getResource( "icons/close.png" ) );
+        add( min );
+        add( max );
+        add( close );
 
         if ( title != null && title.length() > 0 ) {
-            JLabel label = new JLabel( title );
+            label = new JLabel( title );
+            label.setFont( label.getFont().deriveFont( 10f ) );
             label.setOpaque( false );
-            buttonBar.add( label, BorderLayout.WEST );
+            add( label );
         }
 
         min.addActionListener( new AbstractAction() {
@@ -59,8 +54,16 @@ public class DokzButtonBar extends JComponent {
             }
         } );
 
-        setLayout(  );
-        add( buttonBar, BorderLayout.CENTER );
+        setLayout( null );
+    }
+
+    @Override
+    public void setBounds( int x, int y, int width, int height ) {
+        super.setBounds( x, y, width, height );
+        label.setBounds( 10, 1, width - 66, height );
+        close.setBounds( width - 22, 2, 12, 12 );
+        max.setBounds( width - 36, 2, 12, 12 );
+        min.setBounds( width - 50, 2, 12, 12 );
     }
 
     @Override
