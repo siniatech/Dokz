@@ -13,6 +13,7 @@ public class DokzPanel extends JPanel {
         this.buttonBar = dokzContainer.createButtonBarFor( this, title );
 
         setLayout( null );
+        setOpaque( false );
         add( buttonBar );
         add( contentPane );
     }

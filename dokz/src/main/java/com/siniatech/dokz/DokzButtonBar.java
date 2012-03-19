@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -68,11 +69,13 @@ public class DokzButtonBar extends JComponent {
 
     @Override
     protected void paintComponent( Graphics g ) {
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
         g2.setPaint( new LinearGradientPaint( new Point( 0, 0 ), new Point( 0, 16 ), new float[] { 0.2f, 0.8f }, new Color[] { Color.lightGray, new Color( 228, 228, 228 ) } ) );
         g2.fillRect( 8, 0, getWidth() - 16, 16 );
         g2.fillArc( 0, 0, 16, 32, 90, 180 );
         g2.fillArc( getWidth() - 16, 0, 16, 32, 180, 270 );
+        g2.dispose();
     }
 
 }

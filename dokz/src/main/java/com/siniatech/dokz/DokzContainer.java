@@ -1,5 +1,6 @@
 package com.siniatech.dokz;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,8 @@ public class DokzContainer implements IAmJComponent {
 
     public DokzContainer() {
         container = new JPanel();
-        container.setLayout( new GridLayout() );
+        container.setLayout( new GridLayout(1,3,2,2) );
+        container.setBackground( Color.white );
     }
 
     JComponent createButtonBarFor( final DokzPanel dokzPanel, String title ) {
