@@ -22,9 +22,9 @@ public class DokzButtonBar extends JComponent {
     private JLabel label;
 
     public DokzButtonBar( String title, final IResponse0 onMin, final IResponse0 onMax, final IResponse0 onClose ) {
-        min = new DokzButton( this.getClass().getResource( "icons/min.png" ), this.getClass().getResource( "icons/minOver.png" ) );
-        max = new DokzButton( this.getClass().getResource( "icons/max.png" ), this.getClass().getResource( "icons/maxOver.png" ) );
-        close = new DokzButton( this.getClass().getResource( "icons/close.png" ), this.getClass().getResource( "icons/closeOver.png" ) );
+        min = new DokzButton( this.getClass().getResource( "icons/dokzMin.png" ), this.getClass().getResource( "icons/dokzMinOver.png" ) );
+        max = new DokzButton( this.getClass().getResource( "icons/dokzMax.png" ), this.getClass().getResource( "icons/dokzMaxOver.png" ) );
+        close = new DokzButton( this.getClass().getResource( "icons/dokzClose.png" ), this.getClass().getResource( "icons/dokzCloseOver.png" ) );
         add( min );
         add( max );
         add( close );
@@ -62,9 +62,9 @@ public class DokzButtonBar extends JComponent {
     public void setBounds( int x, int y, int width, int height ) {
         super.setBounds( x, y, width, height );
         label.setBounds( 10, 1, width - 66, height );
-        close.setBounds( width - 22, 2, 12, 12 );
-        max.setBounds( width - 36, 2, 12, 12 );
-        min.setBounds( width - 50, 2, 12, 12 );
+        close.setBounds( width - 22, 1, 12, 12 );
+        max.setBounds( width - 36, 1, 12, 12 );
+        min.setBounds( width - 50, 1, 12, 12 );
     }
 
     @Override
