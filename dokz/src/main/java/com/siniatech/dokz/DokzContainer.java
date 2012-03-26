@@ -48,13 +48,15 @@ public class DokzContainer implements IAmJComponent {
 
                 int xMove = e.getPoint().x - resizeStartPoint.x;
                 ArrayList<DokzPanel> keySet = new ArrayList<DokzPanel>( panels.keySet() );
-                DokzPanel p1 = keySet.get( 0 );
-                DokzPanel p2 = keySet.get( 1 );
+                DokzPanel p1 = keySet.get( 1 );
+                DokzPanel p2 = keySet.get( 0 );
                 Rectangle p1b = p1.getBounds();
                 Rectangle p2b = p2.getBounds();
-                p1.setBounds( p1b.x, p1b.y, p1w - xMove, p1b.height );
-                p2.setBounds( p2x + xMove, p2b.y, p2b.width, p2b.height );
+                p1.setBounds( p1b.x, p1b.y, p1w + xMove, p1b.height );
+                p2.setBounds( p2x + xMove, p2b.y, p2w - xMove, p2b.height );
                 container.invalidate();
+                p1.validate();
+                p2.validate();
             }
         } );
         container.addMouseListener( new MouseAdapter() {
@@ -83,6 +85,7 @@ public class DokzContainer implements IAmJComponent {
 
     private Point resizeStartPoint = null;
     private int p1w;
+    private int p2w;
     private int p2x;
 
     private boolean isResizeStarted() {
@@ -96,9 +99,10 @@ public class DokzContainer implements IAmJComponent {
     private void startResize( Point point ) {
         resizeStartPoint = point;
         ArrayList<DokzPanel> keySet = new ArrayList<DokzPanel>( panels.keySet() );
-        DokzPanel p1 = keySet.get( 0 );
-        DokzPanel p2 = keySet.get( 1 );
+        DokzPanel p1 = keySet.get( 1 );
+        DokzPanel p2 = keySet.get( 0 );
         p1w = p1.getWidth();
+        p2w = p2.getWidth();
         p2x = p2.getX();
     }
 
