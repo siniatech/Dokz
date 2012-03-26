@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -45,7 +46,15 @@ public class DokzContainer implements IAmJComponent {
                     return;
                 }
 
-                System.out.println( "moved: " + ( e.getPoint().x - resizeStartPoint.x ) );
+                int xMove = e.getPoint().x - resizeStartPoint.x;
+                ArrayList<DokzPanel> keySet = new ArrayList<DokzPanel>( panels.keySet() );
+                DokzPanel p1 = keySet.get( 0 );
+                DokzPanel p2 = keySet.get( 1 );
+                Rectangle p1b = p1.getBounds();
+                Rectangle p2b = p2.getBounds();
+                p1.setBounds( p1b.x, p1b.y, p1w - xMove, p1b.height );
+                p2.setBounds( p2x + xMove, p2b.y, p2b.width, p2b.height );
+                container.invalidate();
             }
         } );
         container.addMouseListener( new MouseAdapter() {
@@ -73,6 +82,8 @@ public class DokzContainer implements IAmJComponent {
     //////////// EXTRACT TO RESIZE MANAGER 
 
     private Point resizeStartPoint = null;
+    private int p1w;
+    private int p2x;
 
     private boolean isResizeStarted() {
         return resizeStartPoint != null;
@@ -84,6 +95,11 @@ public class DokzContainer implements IAmJComponent {
 
     private void startResize( Point point ) {
         resizeStartPoint = point;
+        ArrayList<DokzPanel> keySet = new ArrayList<DokzPanel>( panels.keySet() );
+        DokzPanel p1 = keySet.get( 0 );
+        DokzPanel p2 = keySet.get( 1 );
+        p1w = p1.getWidth();
+        p2x = p2.getX();
     }
 
     /////////
