@@ -1,7 +1,12 @@
 package com.siniatech.dokz;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +26,75 @@ public class DokzContainer implements IAmJComponent {
 
     public DokzContainer() {
         container = new JPanel();
-        container.setLayout( new GridLayout(1,3,2,2) );
+        container.setLayout( new GridLayout( 1, 3, 2, 2 ) );
         container.setBackground( Color.white );
+        container.addMouseMotionListener( new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved( MouseEvent e ) {
+                Cursor ewResizeCursor = Cursor.getPredefinedCursor( Cursor.E_RESIZE_CURSOR );
+                if ( getPanelAt( e.getPoint() ) == null && container.getCursor() != ewResizeCursor ) {
+                    container.setCursor( ewResizeCursor );
+                } else if ( container.getCursor() != Cursor.getDefaultCursor() ) {
+                    container.setCursor( Cursor.getDefaultCursor() );
+                }
+            }
+
+            @Override
+            public void mouseDragged( MouseEvent e ) {
+                if ( !isResizeStarted() ) {
+                    return;
+                }
+
+                System.out.println( "moved: " + ( e.getPoint().x - resizeStartPoint.x ) );
+            }
+        } );
+        container.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseExited( MouseEvent e ) {
+                container.setCursor( Cursor.getDefaultCursor() );
+            }
+
+            @Override
+            public void mousePressed( MouseEvent e ) {
+                if ( getPanelAt( e.getPoint() ) == null ) {
+                    startResize( e.getPoint() );
+                }
+            }
+
+            @Override
+            public void mouseReleased( MouseEvent e ) {
+                if ( isResizeStarted() ) {
+                    endResize();
+                }
+            }
+        } );
+    }
+
+    //////////// EXTRACT TO RESIZE MANAGER 
+
+    private Point resizeStartPoint = null;
+
+    private boolean isResizeStarted() {
+        return resizeStartPoint != null;
+    }
+
+    private void endResize() {
+        resizeStartPoint = null;
+    }
+
+    private void startResize( Point point ) {
+        resizeStartPoint = point;
+    }
+
+    /////////
+
+    private JPanel getPanelAt( Point point ) {
+        for ( DokzPanel panel : panels.keySet() ) {
+            if ( panel.getBounds().contains( point ) ) {
+                return panel;
+            }
+        }
+        return null;
     }
 
     JComponent createButtonBarFor( final DokzPanel dokzPanel, String title ) {
