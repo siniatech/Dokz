@@ -17,13 +17,14 @@ import com.siniatech.siniautils.fn.IResponse0;
 public class DokzButtonBar extends JComponent {
 
     private DokzButton min;
-    private DokzButton max;
+    private DokzToggleButton max;
     private DokzButton close;
     private JLabel label;
 
     public DokzButtonBar( String title, final IResponse0 onMin, final IResponse0 onMax, final IResponse0 onClose ) {
         min = new DokzButton( this.getClass().getResource( "icons/dokzMin.png" ), this.getClass().getResource( "icons/dokzMinOver.png" ) );
-        max = new DokzButton( this.getClass().getResource( "icons/dokzMax.png" ), this.getClass().getResource( "icons/dokzMaxOver.png" ) );
+        max = new DokzToggleButton( this.getClass().getResource( "icons/dokzMax.png" ), this.getClass().getResource( "icons/dokzMaxOver.png" ), //
+            this.getClass().getResource( "icons/dokzRestore.png" ), this.getClass().getResource( "icons/dokzRestoreOver.png" ) );
         close = new DokzButton( this.getClass().getResource( "icons/dokzClose.png" ), this.getClass().getResource( "icons/dokzCloseOver.png" ) );
         add( min );
         add( max );
