@@ -8,7 +8,7 @@ public class DokzPanel extends JPanel {
     private final JComponent buttonBar;
     private final JComponent contentPane;
 
-    public DokzPanel( DokzContainer dokzContainer, JComponent contentPane, String title ) {
+    public DokzPanel( DokzManager dokzContainer, JComponent contentPane, String title ) {
         this.contentPane = contentPane;
         this.buttonBar = dokzContainer.createButtonBarFor( this, title );
 
