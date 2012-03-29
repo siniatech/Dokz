@@ -62,7 +62,9 @@ public class DokzButtonBar extends JComponent {
     @Override
     public void setBounds( int x, int y, int width, int height ) {
         super.setBounds( x, y, width, height );
-        label.setBounds( 10, 1, width - 66, height );
+        if ( label != null ) {
+            label.setBounds( 10, 1, width - 66, height );
+        }
         close.setBounds( width - 22, 1, 12, 12 );
         max.setBounds( width - 36, 1, 12, 12 );
         min.setBounds( width - 50, 1, 12, 12 );

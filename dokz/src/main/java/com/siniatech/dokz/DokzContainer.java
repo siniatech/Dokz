@@ -4,11 +4,13 @@ import java.awt.Component;
 
 import javax.swing.JPanel;
 
+import com.siniatech.dokz.context.DokzContext;
+
 public class DokzContainer extends JPanel {
 
-    private final DokzContainerContext dokzContext;
+    private final DokzContext dokzContext;
 
-    public DokzContainer( DokzContainerContext dokzContext ) {
+    public DokzContainer( DokzContext dokzContext ) {
         this.dokzContext = dokzContext;
     }
 
@@ -20,6 +22,10 @@ public class DokzContainer extends JPanel {
     public void remove( DokzPanel comp ) {
         dokzContext.getPanelContext( comp ).setVisibleIn( null );
         super.remove( comp );
+    }
+    
+    public DokzContext getDokzContext() {
+        return dokzContext;
     }
 
 }

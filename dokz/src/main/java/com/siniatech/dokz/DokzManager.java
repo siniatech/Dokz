@@ -12,27 +12,31 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.siniatech.dokz.context.DokzContext;
+import com.siniatech.dokz.context.DokzPanelContext;
+import com.siniatech.dokz.context.IDokzContext;
+import com.siniatech.dokz.layout.DokzLayoutManager;
 import com.siniatech.siniautils.fn.IResponse0;
 import com.siniatech.siniautils.swing.IAmJComponent;
 
 public class DokzManager implements IAmJComponent {
 
-    private DokzContainer container;
-    private DokzContainerContext dokzContext;
+    private DokzContext dokzContext;
 
     public DokzManager() {
-        dokzContext = new DokzContainerContext();
-        container = new DokzContainer( dokzContext );
-        container.setLayout( new DokzLayoutManager( dokzContext ) );
-        container.setBackground( Color.white );
-        container.addMouseMotionListener( new MouseMotionAdapter() {
+        dokzContext = new DokzContext();
+        final DokzContainer mainContainer = new DokzContainer( dokzContext );
+        dokzContext.setMainContainer( mainContainer );
+        mainContainer.setLayout( new DokzLayoutManager( dokzContext ) );
+        mainContainer.setBackground( Color.white );
+        mainContainer.addMouseMotionListener( new MouseMotionAdapter() {
             @Override
             public void mouseMoved( MouseEvent e ) {
                 Cursor ewResizeCursor = Cursor.getPredefinedCursor( Cursor.E_RESIZE_CURSOR );
-                if ( getPanelAt( e.getPoint() ) == null && container.getCursor() != ewResizeCursor ) {
-                    container.setCursor( ewResizeCursor );
-                } else if ( container.getCursor() != Cursor.getDefaultCursor() ) {
-                    container.setCursor( Cursor.getDefaultCursor() );
+                if ( getPanelAt( e.getPoint() ) == null && mainContainer.getCursor() != ewResizeCursor ) {
+                    mainContainer.setCursor( ewResizeCursor );
+                } else if ( mainContainer.getCursor() != Cursor.getDefaultCursor() ) {
+                    mainContainer.setCursor( Cursor.getDefaultCursor() );
                 }
             }
 
@@ -50,15 +54,15 @@ public class DokzManager implements IAmJComponent {
                 Rectangle p2b = p2.getBounds();
                 p1.setBounds( p1b.x, p1b.y, p1w + xMove, p1b.height );
                 p2.setBounds( p2x + xMove, p2b.y, p2w - xMove, p2b.height );
-                container.invalidate();
+                mainContainer.invalidate();
                 p1.validate();
                 p2.validate();
             }
         } );
-        container.addMouseListener( new MouseAdapter() {
+        mainContainer.addMouseListener( new MouseAdapter() {
             @Override
             public void mouseExited( MouseEvent e ) {
-                container.setCursor( Cursor.getDefaultCursor() );
+                mainContainer.setCursor( Cursor.getDefaultCursor() );
             }
 
             @Override
@@ -112,8 +116,6 @@ public class DokzManager implements IAmJComponent {
     }
 
     JComponent createButtonBarFor( final DokzPanel dokzPanel, String title ) {
-        assert dokzContext.getPanels().contains( dokzPanel );
-
         IResponse0 onMax = new IResponse0() {
             @Override
             public void respond() {
@@ -122,7 +124,7 @@ public class DokzManager implements IAmJComponent {
                     context.setState( DokzPanelState.maxed );
                     for ( DokzPanel panel : dokzContext.getPanels() ) {
                         if ( panel != dokzPanel && dokzContext.getPanelContext( panel ).getState() == DokzPanelState.open ) {
-                            container.remove( panel );
+                            dokzContext.getMainContainer().remove( panel );
                         }
                     }
                 } else {
@@ -130,11 +132,11 @@ public class DokzManager implements IAmJComponent {
                     context.setState( DokzPanelState.open );
                     for ( DokzPanel panel : dokzContext.getPanels() ) {
                         if ( panel != dokzPanel && dokzContext.getPanelContext( panel ).getState() == DokzPanelState.open ) {
-                            container.add( panel );
+                            dokzContext.getMainContainer().add( panel );
                         }
                     }
                 }
-                container.revalidate();
+                dokzContext.getMainContainer().revalidate();
             }
         };
         IResponse0 onClose = new IResponse0() {
@@ -154,18 +156,18 @@ public class DokzManager implements IAmJComponent {
 
     @Override
     public JComponent asJComponent() {
-        return container;
+        return dokzContext.getMainContainer();
     }
 
     private void close( final DokzPanel dokzPanel ) {
-        container.remove( dokzPanel );
-        container.revalidate();
+        dokzContext.getMainContainer().remove( dokzPanel );
+        dokzContext.getMainContainer().revalidate();
         dokzContext.getPanelContext( dokzPanel ).setState( DokzPanelState.closed );
     }
 
     private void open( final DokzPanel dokzPanel ) {
-        container.add( dokzPanel );
-        container.validate();
+        dokzContext.getMainContainer().add( dokzPanel );
+        dokzContext.getMainContainer().validate();
         dokzContext.getPanelContext( dokzPanel ).setState( DokzPanelState.open );
     }
 
@@ -182,7 +184,7 @@ public class DokzManager implements IAmJComponent {
                 close( dokzPanel );
             }
         } ) );
-        container.add( dokzPanel );
+        dokzContext.getMainContainer().add( dokzPanel );
     }
 
     public void add( JComponent component ) {
