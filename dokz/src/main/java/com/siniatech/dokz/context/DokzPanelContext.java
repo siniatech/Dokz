@@ -62,4 +62,7 @@ public class DokzPanelContext {
         this.bounds = bounds;
     }
 
+    public void setBounds( int x, int y, int w, int h ) {
+        setBounds( new Rectangle( x, y, w, h ) );
+    }
 }

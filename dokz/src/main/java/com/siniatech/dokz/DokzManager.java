@@ -76,6 +76,10 @@ public class DokzManager implements IAmJComponent {
             public void mouseReleased( MouseEvent e ) {
                 if ( isResizeStarted() ) {
                     endResize();
+                } else if ( e.getClickCount() > 1 ) {
+                    System.out.println( "POP" );
+                    // these listeners probably need be in the container
+
                 }
             }
         } );
@@ -185,6 +189,11 @@ public class DokzManager implements IAmJComponent {
             }
         } ) );
         dokzContext.getMainContainer().add( dokzPanel );
+        initializeBounds( dokzPanel );
+    }
+
+    private void initializeBounds( DokzPanel dokzPanel ) {
+        dokzContext.getPanelContext( dokzPanel ).setBounds( 0, 0, 100, 100 );
     }
 
     public void add( JComponent component ) {
