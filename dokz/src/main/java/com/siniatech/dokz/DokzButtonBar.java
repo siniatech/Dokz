@@ -65,9 +65,9 @@ public class DokzButtonBar extends JComponent {
         if ( label != null ) {
             label.setBounds( 10, 1, width - 66, height );
         }
-        close.setBounds( width - 22, 1, 12, 12 );
-        max.setBounds( width - 36, 1, 12, 12 );
-        min.setBounds( width - 50, 1, 12, 12 );
+        close.setBounds( width - 22, 2, 12, 12 );
+        max.setBounds( width - 36, 2, 12, 12 );
+        min.setBounds( width - 50, 2, 12, 12 );
     }
 
     @Override
@@ -78,6 +78,12 @@ public class DokzButtonBar extends JComponent {
         g2.fillRect( 8, 0, getWidth() - 16, 16 );
         g2.fillArc( 0, 0, 16, 32, 90, 180 );
         g2.fillArc( getWidth() - 16, 0, 16, 32, 180, 270 );
+        g2.setColor( Color.darkGray );
+        g2.drawArc( 0, 0, 16, 32, 90, 180 );
+        g2.drawArc( getWidth() - 16, 0, 16, 32, 180, 270 );
+        g2.drawLine( 8, 0, getWidth() - 8, 0 );
+        g2.drawLine( 0, 11, 0, 16 );
+        g2.drawLine( getWidth() - 1, 11, getWidth() - 1, 16 );
         g2.dispose();
     }
 
