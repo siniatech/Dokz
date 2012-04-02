@@ -1,18 +1,23 @@
 package com.siniatech.dokz.context;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JMenuItem;
 
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
+import com.siniatech.dokz.api.IDokzContext;
 
 public class DokzContext implements IDokzContext {
 
     private Map<DokzPanel, DokzPanelContext> panels = new HashMap<>();
+    private Set<DokzContainer> containers = new HashSet<>();
     private DokzContainer mainContainer;
 
     public void setMainContainer( DokzContainer mainContainer ) {
@@ -27,8 +32,10 @@ public class DokzContext implements IDokzContext {
         return panels.get( panel );
     }
 
-    public void add( DokzPanel panel, DokzPanelContext context ) {
+    public void add( DokzPanel panel, DokzContainer container, DokzPanelContext context ) {
+        containers.add( container );
         panels.put( panel, context );
+        container.add( panel );
     }
 
     @Override
@@ -42,5 +49,19 @@ public class DokzContext implements IDokzContext {
 
     public DokzContainer getMainContainer() {
         return mainContainer;
+    }
+
+    public Set<DokzContainer> getContainers() {
+        return Collections.unmodifiableSet( containers );
+    }
+
+    public Set<DokzPanel> getPanelsIn( DokzContainer container ) {
+        Set<DokzPanel> panels = new HashSet<>();
+        for ( DokzPanel panel : getPanels() ) {
+            if ( getPanelContext( panel ).isVisibleIn( container ) ) {
+                panels.add(panel);
+            }
+        }
+        return panels;
     }
 }

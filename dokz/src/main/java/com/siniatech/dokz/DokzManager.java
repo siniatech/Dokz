@@ -12,9 +12,10 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.siniatech.dokz.api.IDokzContext;
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.context.DokzPanelContext;
-import com.siniatech.dokz.context.IDokzContext;
+import com.siniatech.dokz.layout.BoundsInitializer;
 import com.siniatech.dokz.layout.DokzLayoutManager;
 import com.siniatech.siniautils.fn.IResponse0;
 import com.siniatech.siniautils.swing.IAmJComponent;
@@ -26,9 +27,10 @@ public class DokzManager implements IAmJComponent {
     public DokzManager() {
         dokzContext = new DokzContext();
         final DokzContainer mainContainer = new DokzContainer( dokzContext );
+        mainContainer.setSize( 700, 500 );
         dokzContext.setMainContainer( mainContainer );
         mainContainer.setLayout( new DokzLayoutManager( dokzContext ) );
-        mainContainer.setBackground( Color.white );
+        mainContainer.setBackground( Color.lightGray );
         mainContainer.addMouseMotionListener( new MouseMotionAdapter() {
             @Override
             public void mouseMoved( MouseEvent e ) {
@@ -177,7 +179,7 @@ public class DokzManager implements IAmJComponent {
 
     public void add( JComponent component, String title ) {
         final DokzPanel dokzPanel = new DokzPanel( this, component, title );
-        dokzContext.add( dokzPanel, new DokzPanelContext( title, new IResponse0() {
+        dokzContext.add( dokzPanel, dokzContext.getMainContainer(), new DokzPanelContext( title, new IResponse0() {
             @Override
             public void respond() {
                 open( dokzPanel );
@@ -188,12 +190,11 @@ public class DokzManager implements IAmJComponent {
                 close( dokzPanel );
             }
         } ) );
-        dokzContext.getMainContainer().add( dokzPanel );
         initializeBounds( dokzPanel );
     }
 
     private void initializeBounds( DokzPanel dokzPanel ) {
-        dokzContext.getPanelContext( dokzPanel ).setBounds( 0, 0, 100, 100 );
+        new BoundsInitializer().initalizeBounds( dokzContext );
     }
 
     public void add( JComponent component ) {
