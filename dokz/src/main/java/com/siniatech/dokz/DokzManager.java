@@ -48,8 +48,8 @@ public class DokzManager implements IAmJComponent {
 
                 int xMove = e.getPoint().x - resizeStartPoint.x;
                 List<DokzPanel> keySet = dokzContext.getPanels();
-                DokzPanel p1 = keySet.get( 1 );
-                DokzPanel p2 = keySet.get( 0 );
+                DokzPanel p1 = keySet.get( 0 );
+                DokzPanel p2 = keySet.get( 1 );
                 Rectangle p1b = p1.getBounds();
                 Rectangle p2b = p2.getBounds();
                 p1.setBounds( p1b.x, p1b.y, p1w + xMove, p1b.height );
@@ -101,8 +101,8 @@ public class DokzManager implements IAmJComponent {
     void startResize( Point point ) {
         resizeStartPoint = point;
         List<DokzPanel> keySet = dokzContext.getPanels();
-        DokzPanel p1 = keySet.get( 1 );
-        DokzPanel p2 = keySet.get( 0 );
+        DokzPanel p1 = keySet.get( 0 );
+        DokzPanel p2 = keySet.get( 1 );
         p1w = p1.getWidth();
         p2w = p2.getWidth();
         p2x = p2.getX();

@@ -1,6 +1,5 @@
 package com.siniatech.dokz.context;
 
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -16,7 +15,6 @@ public class DokzPanelContext {
     private DokzPanelState state;
     private JCheckBoxMenuItem menuItem;
     private DokzContainer container;
-    private Rectangle bounds;
 
     public DokzPanelContext( String title, final IResponse0 openFunction, final IResponse0 closeFunction ) {
         menuItem = new JCheckBoxMenuItem( title );
@@ -54,15 +52,4 @@ public class DokzPanelContext {
         return this.container == container;
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
-
-    public void setBounds( Rectangle bounds ) {
-        this.bounds = bounds;
-    }
-
-    public void setBounds( int x, int y, int w, int h ) {
-        setBounds( new Rectangle( x, y, w, h ) );
-    }
 }
