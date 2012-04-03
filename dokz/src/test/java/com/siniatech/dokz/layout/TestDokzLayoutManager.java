@@ -1,10 +1,13 @@
 package com.siniatech.dokz.layout;
 
+import static com.siniatech.dokz.context.DokzContext.*;
+import static com.siniatech.siniautils.set.SetHelper.*;
 import static junit.framework.Assert.*;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -28,10 +31,6 @@ public class TestDokzLayoutManager {
         dokz.add( new JPanel() );
         dokz.add( new JPanel() );
         DokzContext dokzContext = (DokzContext) dokz.getDokzContext();
-        List<DokzPanel> panels = dokzContext.getPanels();
-        dokzContext.getPanelContext( panels.get( 0 ) ).setBounds( new Rectangle( 0, 0, 500, 600 ) );
-        dokzContext.getPanelContext( panels.get( 1 ) ).setBounds( new Rectangle( 500, 0, 500, 200 ) );
-        dokzContext.getPanelContext( panels.get( 2 ) ).setBounds( new Rectangle( 500, 200, 500, 400 ) );
         mainContainer = dokzContext.getMainContainer();
         layoutManager = new DokzLayoutManager( dokzContext );
     }
@@ -49,18 +48,36 @@ public class TestDokzLayoutManager {
     }
 
     @Test
-    public void checkPreferredLayoutSize() {
-        assertEquals( new Dimension( 1000, 600 ), layoutManager.preferredLayoutSize( mainContainer ) );
+    public void preferredLayoutSizeShouldFillContainer() {
+        assertEquals( new Dimension( 0, 0 ), layoutManager.preferredLayoutSize( mainContainer ) );
+        checkPreferredLayoutSize( new Dimension( 1000, 800 ) );
+        checkPreferredLayoutSize( new Dimension( 400, 600 ) );
+        checkPreferredLayoutSize( new Dimension( 90, 120 ) );
+    }
+
+    private void checkPreferredLayoutSize( Dimension d ) {
+        mainContainer.setSize( d );
+        layoutManager.layoutContainer( mainContainer );
+        assertEquals( mainContainer.getSize(), layoutManager.preferredLayoutSize( mainContainer ) );
+        assertEquals( d, mainContainer.getSize() );
     }
 
     @Test
     public void checkLayoutOfMainContainer() {
+        mainContainer.setSize( new Dimension( 1000 + defaultPanelGap, 600 + defaultPanelGap ) );
         layoutManager.layoutContainer( mainContainer );
         DokzContext dokzContext = mainContainer.getDokzContext();
+        Set<Rectangle> expectedBounds = asSet( //
+            new Rectangle( 0, 0, 500, 300 ), //
+            new Rectangle( 500 + defaultPanelGap, 0, 500, 300 ), //
+            new Rectangle( 0, 300 + defaultPanelGap, 1000 + defaultPanelGap, 300 ) //
+        );
+        Set<Rectangle> actualBounds = new HashSet<>();
         for ( DokzPanel panel : dokzContext.getPanels() ) {
-            assertEquals( dokzContext.getPanelContext( panel ).getBounds(), panel.getBounds() );
+            actualBounds.add( panel.getBounds() );
         }
+        assertEquals( expectedBounds, actualBounds );
     }
-
     // TODO - test popped out panels are not laid out
+    // TODO - test resizing layout
 }

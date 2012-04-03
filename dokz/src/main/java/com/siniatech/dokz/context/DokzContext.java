@@ -16,6 +16,8 @@ import com.siniatech.dokz.api.IDokzContext;
 
 public class DokzContext implements IDokzContext {
 
+    public static final int defaultPanelGap = 5;
+    
     private Map<DokzPanel, DokzPanelContext> panels = new HashMap<>();
     private Set<DokzContainer> containers = new HashSet<>();
     private DokzContainer mainContainer;
@@ -66,6 +68,6 @@ public class DokzContext implements IDokzContext {
     }
 
     public int getPanelGap() {
-        return 5;
+        return defaultPanelGap;
     }
 }
