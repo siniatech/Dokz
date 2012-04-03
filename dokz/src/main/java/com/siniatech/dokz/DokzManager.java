@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import com.siniatech.dokz.api.IDokzContext;
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.context.DokzPanelContext;
-import com.siniatech.dokz.layout.BoundsInitializer;
 import com.siniatech.dokz.layout.DokzLayoutManager;
 import com.siniatech.siniautils.fn.IResponse0;
 import com.siniatech.siniautils.swing.IAmJComponent;
@@ -27,7 +26,6 @@ public class DokzManager implements IAmJComponent {
     public DokzManager() {
         dokzContext = new DokzContext();
         final DokzContainer mainContainer = new DokzContainer( dokzContext );
-        mainContainer.setSize( 700, 500 );
         dokzContext.setMainContainer( mainContainer );
         mainContainer.setLayout( new DokzLayoutManager( dokzContext ) );
         mainContainer.setBackground( Color.lightGray );
@@ -190,11 +188,6 @@ public class DokzManager implements IAmJComponent {
                 close( dokzPanel );
             }
         } ) );
-        initializeBounds( dokzPanel );
-    }
-
-    private void initializeBounds( DokzPanel dokzPanel ) {
-        new BoundsInitializer().initalizeBounds( dokzContext );
     }
 
     public void add( JComponent component ) {

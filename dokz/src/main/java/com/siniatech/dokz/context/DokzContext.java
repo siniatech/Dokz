@@ -59,9 +59,13 @@ public class DokzContext implements IDokzContext {
         Set<DokzPanel> panels = new HashSet<>();
         for ( DokzPanel panel : getPanels() ) {
             if ( getPanelContext( panel ).isVisibleIn( container ) ) {
-                panels.add(panel);
+                panels.add( panel );
             }
         }
         return panels;
+    }
+
+    public int getPanelGap() {
+        return 5;
     }
 }

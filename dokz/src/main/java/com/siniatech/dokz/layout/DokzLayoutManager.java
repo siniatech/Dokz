@@ -1,12 +1,14 @@
 package com.siniatech.dokz.layout;
 
+import static com.siniatech.siniautils.swing.BoundsHelper.*;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
@@ -14,10 +16,16 @@ import com.siniatech.dokz.context.DokzContext;
 
 public class DokzLayoutManager implements LayoutManager {
 
-    private final DokzContext dokzContainerContext;
+    static private final ILayouter scalingLayouter = new ScalingLayouter();
+    static private final ILayouter tilingLayouter = new TilingLayouter();
+
+    private final DokzContext dokzContext;
+
+    private Collection<DokzPanel> lastLaidOutComponents;
 
     public DokzLayoutManager( DokzContext dokzContainerContext ) {
-        this.dokzContainerContext = dokzContainerContext;
+        this.dokzContext = dokzContainerContext;
+        this.lastLaidOutComponents = new HashSet<>();
     }
 
     @Override
@@ -30,13 +38,7 @@ public class DokzLayoutManager implements LayoutManager {
 
     @Override
     public Dimension preferredLayoutSize( Container parent ) {
-        int maxX = 0, maxY = 0;
-        for ( DokzPanel panel : getPanels( (DokzContainer) parent ) ) {
-            Rectangle bounds = dokzContainerContext.getPanelContext( panel ).getBounds();
-            maxX = ( bounds.x + bounds.width ) > maxX ? bounds.x + bounds.width : maxX;
-            maxY = ( bounds.y + bounds.height ) > maxY ? bounds.y + bounds.height : maxY;
-        }
-        return new Dimension( maxX, maxY );
+        return getExtentOfComponents( lastLaidOutComponents );
     }
 
     @Override
@@ -46,15 +48,30 @@ public class DokzLayoutManager implements LayoutManager {
 
     @Override
     public void layoutContainer( Container parent ) {
-        for ( DokzPanel panel : getPanels( (DokzContainer) parent ) ) {
-            panel.setBounds( dokzContainerContext.getPanelContext( panel ).getBounds() );
+        Set<DokzPanel> currentComponents = getPanels( (DokzContainer) parent );
+        if ( lastLaidOutComponents == currentComponents ) {
+            layoutSameComponents( parent );
+        } else {
+            layoutNewComponents( parent, currentComponents );
         }
+        lastLaidOutComponents = currentComponents;
     }
 
-    private List<DokzPanel> getPanels( DokzContainer parent ) {
-        List<DokzPanel> panels = new ArrayList<>();
-        for ( DokzPanel panel : dokzContainerContext.getPanels() ) {
-            if ( dokzContainerContext.getPanelContext( panel ).isVisibleIn( parent ) ) {
+    private void layoutNewComponents( Container parent, Set<DokzPanel> currentComponents ) {
+        tilingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+    }
+
+    private void layoutSameComponents( Container parent ) {
+        if ( getExtentOfComponents( lastLaidOutComponents ) != parent.getSize() ) {
+            scalingLayouter.doLayout( lastLaidOutComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+        }
+        // else do nothing
+    }
+
+    private Set<DokzPanel> getPanels( DokzContainer parent ) {
+        Set<DokzPanel> panels = new HashSet<>();
+        for ( DokzPanel panel : dokzContext.getPanels() ) {
+            if ( dokzContext.getPanelContext( panel ).isVisibleIn( parent ) ) {
                 panels.add( panel );
             }
         }

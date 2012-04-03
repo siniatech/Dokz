@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-public class TestTileLayouter {
+public class TestTilingLayouter {
 
-    private TileLayouter layouter = new TileLayouter();
+    private TilingLayouter layouter = new TilingLayouter();
 
     @Test
     public void shouldLayoutEmptyContainer() {

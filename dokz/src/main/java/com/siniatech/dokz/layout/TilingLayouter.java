@@ -6,14 +6,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class TileLayouter extends AbstractLayouter {
+public class TilingLayouter extends AbstractLayouter {
 
     @Override
-    public void doLayout( List<Component> components, Dimension size, int hGap, int vGap ) {
+    public void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap ) {
         int xSide = (int) ceil( sqrt( components.size() ) );
         if ( xSide != 0 ) {
             Map<Point, Rectangle> coordToBounds = determineBoundsOfGrid( components, size, hGap, vGap, xSide );
@@ -21,7 +21,7 @@ public class TileLayouter extends AbstractLayouter {
         }
     }
 
-    private Map<Point, Rectangle> determineBoundsOfGrid( List<Component> components, Dimension size, int hGap, int vGap, int xSide ) {
+    private Map<Point, Rectangle> determineBoundsOfGrid( Collection<? extends Component> components, Dimension size, int hGap, int vGap, int xSide ) {
         int ySide = components.size() > ( ( xSide * xSide ) - xSide ) ? xSide : ( xSide - 1 );
         int xOfLastComp = ( xSide * ySide ) != components.size() ? xSide - 1 - ( ( xSide * ySide ) - components.size() ) : -1;
         int endCol = xSide - 1;
@@ -48,7 +48,7 @@ public class TileLayouter extends AbstractLayouter {
         return coordToBounds;
     }
 
-    private void assignBoundsToComponents( List<Component> components, Map<Point, Rectangle> coordToBounds, int endCol ) {
+    private void assignBoundsToComponents( Collection<? extends Component> components, Map<Point, Rectangle> coordToBounds, int endCol ) {
         int x = 0;
         int y = 0;
         for ( Component component : components ) {

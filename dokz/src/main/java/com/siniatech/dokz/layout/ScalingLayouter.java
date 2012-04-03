@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.siniatech.siniautils.fn.IFunction1;
@@ -24,7 +25,7 @@ import com.siniatech.siniautils.fn.IFunction1;
 public class ScalingLayouter extends AbstractLayouter {
 
     @Override
-    public void doLayout( List<Component> components, Dimension size, int hGap, int vGap ) {
+    public void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap ) {
         if ( components.size() > 0 ) {
             doRoughScaledLayout( components, size );
             correctGapsAndBorders( components, size, hGap, vGap );
@@ -32,7 +33,7 @@ public class ScalingLayouter extends AbstractLayouter {
 
     }
 
-    private void correctGapsAndBorders( List<Component> components, Dimension newSize, int hGap, int vGap ) {
+    private void correctGapsAndBorders( Collection<? extends Component> components, Dimension newSize, int hGap, int vGap ) {
         List<Component> componentsCorrected = new ArrayList<>();
         while ( components.size() != componentsCorrected.size() ) {
             List<Component> componentsNotCorrected = new ArrayList<>( components );
@@ -43,7 +44,7 @@ public class ScalingLayouter extends AbstractLayouter {
         }
     }
 
-    private void correctGapsAndBorders( Component component, List<Component> components, Dimension newSize, int hGap, int vGap ) {
+    private void correctGapsAndBorders( Component component, Collection<? extends Component> components, Dimension newSize, int hGap, int vGap ) {
         Rectangle bounds = component.getBounds();
         int right = bounds.x + bounds.width;
         int bottom = bounds.y + bounds.height;
@@ -56,11 +57,9 @@ public class ScalingLayouter extends AbstractLayouter {
         component.setBounds( bounds.x, bounds.y, w, h );
     }
 
-    private void doRoughScaledLayout( List<Component> components, Dimension newSize ) {
-        double currentXExtent = getCurrentXExtent( components );
-        double currentYExtent = getCurrentYExtent( components );
-        double xScale = newSize.width / currentXExtent;
-        double yScale = newSize.height / currentYExtent;
+    private void doRoughScaledLayout( Collection<? extends Component> components, Dimension newSize ) {
+        double xScale = newSize.width / (double) getXExtentOfComponents( components );
+        double yScale = newSize.height / (double) getYExtentOfComponents( components );
         IFunction1<Double, Integer> xRoundingFn = createRoundingFn( xScale );
         IFunction1<Double, Integer> yRoundingFn = createRoundingFn( yScale );
         for ( Component component : components ) {
@@ -82,23 +81,4 @@ public class ScalingLayouter extends AbstractLayouter {
         };
     }
 
-    private int getCurrentXExtent( List<Component> components ) {
-        int maxX = 0;
-        for ( Component component : components ) {
-            Rectangle bounds = component.getBounds();
-            int xExtent = bounds.width + bounds.x;
-            maxX = xExtent > maxX ? xExtent : maxX;
-        }
-        return maxX;
-    }
-
-    private int getCurrentYExtent( List<Component> components ) {
-        int maxY = 0;
-        for ( Component component : components ) {
-            Rectangle bounds = component.getBounds();
-            int yExtent = bounds.height + bounds.y;
-            maxY = yExtent > maxY ? yExtent : maxY;
-        }
-        return maxY;
-    }
 }

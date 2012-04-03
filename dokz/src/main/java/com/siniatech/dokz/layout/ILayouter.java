@@ -2,12 +2,12 @@ package com.siniatech.dokz.layout;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.List;
+import java.util.Collection;
 
 public interface ILayouter {
 
-    void doLayout(List<Component> components, Dimension size);
+    void doLayout( Collection<? extends Component> components, Dimension size );
 
     // make tiling layouter implement
-    void doLayout(List<Component> components, Dimension size, int hGap, int vGap);
+    void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap );
 }
