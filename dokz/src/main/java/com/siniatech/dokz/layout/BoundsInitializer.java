@@ -24,7 +24,7 @@ public class BoundsInitializer {
         Set<DokzPanel> panels = dokzContext.getPanelsIn( container );
         // arbitary order at the moment
         List<Component> sortedPanels = new ArrayList<Component>( panels );
-        layouter.doLayout( sortedPanels, container.getWidth(), container.getHeight(), 3, 3 );
+        layouter.doLayout( sortedPanels, container.getSize(), 3, 3 );
         for ( DokzPanel panel : panels ) {
             dokzContext.getPanelContext( panel ).setBounds( panel.getBounds() );
         }

@@ -1,38 +1,35 @@
 package com.siniatech.dokz.layout;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileLayouter {
+public class TileLayouter extends AbstractLayouter {
 
-    public void doLayout( List<Component> components, int width, int height ) {
-        doLayout( components, width, height, 0, 0 );
-    }
-
-    public void doLayout( List<Component> components, int width, int height, int hGap, int vGap ) {
+    @Override
+    public void doLayout( List<Component> components, Dimension size, int hGap, int vGap ) {
         int xSide = (int) ceil( sqrt( components.size() ) );
         if ( xSide != 0 ) {
-            Map<Point, Rectangle> coordToBounds = determineBoundsOfGrid( components, width, height, hGap, vGap, xSide );
+            Map<Point, Rectangle> coordToBounds = determineBoundsOfGrid( components, size, hGap, vGap, xSide );
             assignBoundsToComponents( components, coordToBounds, xSide - 1 );
         }
     }
 
-    private Map<Point, Rectangle> determineBoundsOfGrid( List<Component> components, int width, int height, int hGap, int vGap, int xSide ) {
+    private Map<Point, Rectangle> determineBoundsOfGrid( List<Component> components, Dimension size, int hGap, int vGap, int xSide ) {
         int ySide = components.size() > ( ( xSide * xSide ) - xSide ) ? xSide : ( xSide - 1 );
         int xOfLastComp = ( xSide * ySide ) != components.size() ? xSide - 1 - ( ( xSide * ySide ) - components.size() ) : -1;
         int endCol = xSide - 1;
         int endRow = ySide - 1;
-        int compWidth = ( width - ( hGap * ( xSide - 1 ) ) ) / xSide;
-        int compHeight = ( height - ( vGap * ( ySide - 1 ) ) ) / ySide;
-        int rowEndCompWidth = ( width - ( hGap * ( xSide - 1 ) ) ) - ( endCol * compWidth );
-        int colEndCompHeight = ( height - ( vGap * ( ySide - 1 ) ) ) - ( endRow * compHeight );
+        int compWidth = ( size.width - ( hGap * ( xSide - 1 ) ) ) / xSide;
+        int compHeight = ( size.height - ( vGap * ( ySide - 1 ) ) ) / ySide;
+        int rowEndCompWidth = ( size.width - ( hGap * ( xSide - 1 ) ) ) - ( endCol * compWidth );
+        int colEndCompHeight = ( size.height - ( vGap * ( ySide - 1 ) ) ) - ( endRow * compHeight );
         Map<Point, Rectangle> coordToBounds = new HashMap<>();
         for ( int i = 0; i < xSide; i++ ) {
             for ( int j = 0; j < ySide; j++ ) {
@@ -40,7 +37,7 @@ public class TileLayouter {
                 int y = ( compHeight + vGap ) * j;
                 final int w;
                 if ( j == endRow && i == xOfLastComp ) {
-                    w = width - x;
+                    w = size.width - x;
                 } else {
                     w = ( i == endCol ) ? rowEndCompWidth : compWidth;
                 }
