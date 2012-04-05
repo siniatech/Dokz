@@ -78,7 +78,7 @@ public class DokzButtonBar extends JComponent {
         g2.fillRect( 8, 0, getWidth() - 16, 16 );
         g2.fillArc( 0, 0, 16, 32, 90, 180 );
         g2.fillArc( getWidth() - 16, 0, 16, 32, 180, 270 );
-        g2.setColor( Color.darkGray );
+        g2.setColor( DokzConstants.borderColor );
         g2.drawArc( 0, 0, 16, 32, 90, 180 );
         g2.drawArc( getWidth() - 16, 0, 16, 32, 180, 270 );
         g2.drawLine( 8, 0, getWidth() - 8, 0 );

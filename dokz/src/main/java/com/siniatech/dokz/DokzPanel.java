@@ -1,6 +1,5 @@
 package com.siniatech.dokz;
 
-import java.awt.Color;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -19,7 +18,7 @@ public class DokzPanel extends JPanel {
         setOpaque( false );
         add( buttonBar );
         add( contentPane );
-        contentPane.setBorder( new LineBorder( Color.darkGray, 1 ) );
+        contentPane.setBorder( new LineBorder( DokzConstants.borderColor, 1 ) );
     }
 
     @Override
