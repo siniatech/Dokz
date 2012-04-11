@@ -53,7 +53,6 @@ public class DokzContainer extends JPanel {
     
     public DokzContainer( final DokzContext dokzContext ) {
         this.dokzContext = dokzContext;
-        
         setLayout( new DokzLayoutManager( dokzContext ) );
         setBackground( Color.lightGray );
         addMouseMotionListener( new MouseMotionAdapter() {
@@ -62,7 +61,7 @@ public class DokzContainer extends JPanel {
                 Cursor ewResizeCursor = Cursor.getPredefinedCursor( Cursor.E_RESIZE_CURSOR );
                 if ( getPanelAt( e.getPoint() ) == null && getCursor() != ewResizeCursor ) {
                     setCursor( ewResizeCursor );
-                } else if ( getCursor() != Cursor.getDefaultCursor() ) {
+                } else if ( getPanelAt( e.getPoint() ) != null && getCursor() != Cursor.getDefaultCursor() ) {
                     setCursor( Cursor.getDefaultCursor() );
                 }
             }
