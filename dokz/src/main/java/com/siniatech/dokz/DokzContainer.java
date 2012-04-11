@@ -1,88 +1,64 @@
 package com.siniatech.dokz;
 
+import static com.siniatech.dokz.DokzConstants.*;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.List;
 
 import javax.swing.JPanel;
 
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.layout.DokzLayoutManager;
+import com.siniatech.siniautils.fn.IResponse0;
 
 public class DokzContainer extends JPanel {
 
     private final DokzContext dokzContext;
+    private final DokzResizeManager dokzResizeManager;
 
-    private Point resizeStartPoint = null;
-    private int p1w;
-    private int p2w;
-    private int p2x;
-
-    boolean isResizeStarted() {
-        return resizeStartPoint != null;
-    }
-
-    void endResize() {
-        resizeStartPoint = null;
-    }
-
-    void startResize( Point point ) {
-        resizeStartPoint = point;
-        List<DokzPanel> keySet = dokzContext.getPanels();
-        DokzPanel p1 = keySet.get( 0 );
-        DokzPanel p2 = keySet.get( 1 );
-        p1w = p1.getWidth();
-        p2w = p2.getWidth();
-        p2x = p2.getX();
-    }
-    
-    JPanel getPanelAt( Point point ) {
-        for ( DokzPanel panel : dokzContext.getPanels() ) {
-            if ( panel.getBounds().contains( point ) ) {
-                return panel;
-            }
-        }
-        return null;
-    }
-    
     public DokzContainer( final DokzContext dokzContext ) {
         this.dokzContext = dokzContext;
+        this.dokzResizeManager = new DokzResizeManager( new IResponse0() {
+            @Override
+            public void respond() {
+                invalidate();
+            }
+        } );
         setLayout( new DokzLayoutManager( dokzContext ) );
         setBackground( Color.lightGray );
         addMouseMotionListener( new MouseMotionAdapter() {
             @Override
             public void mouseMoved( MouseEvent e ) {
-                Cursor ewResizeCursor = Cursor.getPredefinedCursor( Cursor.E_RESIZE_CURSOR );
-                if ( getPanelAt( e.getPoint() ) == null && getCursor() != ewResizeCursor ) {
-                    setCursor( ewResizeCursor );
-                } else if ( getPanelAt( e.getPoint() ) != null && getCursor() != Cursor.getDefaultCursor() ) {
-                    setCursor( Cursor.getDefaultCursor() );
+                DokzNeighbourContext panelsAround = getPanelsAround( e.getPoint() );
+                if ( panelsAround.getPoint() != null ) {
+                    resetCursor();
+                } else {
+                    Cursor nsResizeCursor = Cursor.getPredefinedCursor( Cursor.N_RESIZE_CURSOR );
+                    Cursor ewResizeCursor = Cursor.getPredefinedCursor( Cursor.E_RESIZE_CURSOR );
+                    if ( panelsAround.getEast() != null && panelsAround.getWest() != null ) {
+                        if ( getCursor() != ewResizeCursor ) {
+                            setCursor( ewResizeCursor );
+                        }
+                    } else if ( panelsAround.getNorth() != null && panelsAround.getSouth() != null ) {
+                        if ( getCursor() != nsResizeCursor ) {
+                            setCursor( nsResizeCursor );
+                        }
+                    } else {
+                        resetCursor();
+                    }
                 }
             }
 
             @Override
             public void mouseDragged( MouseEvent e ) {
-                if ( !isResizeStarted() ) {
-                    return;
+                if ( dokzResizeManager.isResizeStarted() ) {
+                    dokzResizeManager.doResize( e.getPoint() );
                 }
-
-                int xMove = e.getPoint().x - resizeStartPoint.x;
-                List<DokzPanel> keySet = dokzContext.getPanels();
-                DokzPanel p1 = keySet.get( 0 );
-                DokzPanel p2 = keySet.get( 1 );
-                Rectangle p1b = p1.getBounds();
-                Rectangle p2b = p2.getBounds();
-                p1.setBounds( p1b.x, p1b.y, p1w + xMove, p1b.height );
-                p2.setBounds( p2x + xMove, p2b.y, p2w - xMove, p2b.height );
-                invalidate();
-                p1.validate();
-                p2.validate();
             }
         } );
         addMouseListener( new MouseAdapter() {
@@ -93,22 +69,27 @@ public class DokzContainer extends JPanel {
 
             @Override
             public void mousePressed( MouseEvent e ) {
-                if ( getPanelAt( e.getPoint() ) == null ) {
-                    startResize( e.getPoint() );
+                DokzNeighbourContext panelsAround = getPanelsAround( e.getPoint() );
+                if ( dokzResizeManager.canStartResize( panelsAround ) ) {
+                    dokzResizeManager.startResize( e.getPoint(), panelsAround, dokzContext.getPanelsIn( DokzContainer.this ) );
                 }
             }
 
             @Override
             public void mouseReleased( MouseEvent e ) {
-                if ( isResizeStarted() ) {
-                    endResize();
+                if ( dokzResizeManager.isResizeStarted() ) {
+                    dokzResizeManager.endResize();
                 } else if ( e.getClickCount() > 1 ) {
                     System.out.println( "POP" );
-                    // these listeners probably need be in the container
-
                 }
             }
         } );
+    }
+
+    private void resetCursor() {
+        if ( getCursor() != Cursor.getDefaultCursor() ) {
+            setCursor( Cursor.getDefaultCursor() );
+        }
     }
 
     public Component add( DokzPanel comp ) {
@@ -120,12 +101,31 @@ public class DokzContainer extends JPanel {
         dokzContext.getPanelContext( comp ).setVisibleIn( null );
         super.remove( comp );
     }
-    
+
     public DokzContext getDokzContext() {
         return dokzContext;
     }
-    
-    
-    
 
+    DokzPanel getPanelAt( int x, int y ) {
+        return getPanelAt( new Point( x, y ) );
+    }
+
+    DokzPanel getPanelAt( Point point ) {
+        for ( DokzPanel panel : dokzContext.getPanelsIn( this ) ) {
+            if ( panel.getBounds().contains( point ) ) {
+                return panel;
+            }
+        }
+        return null;
+    }
+
+    private DokzNeighbourContext getPanelsAround( Point point ) {
+        return new DokzNeighbourContext( //
+            getPanelAt( point.x, point.y - defaultPanelGap ), //
+            getPanelAt( point.x, point.y + defaultPanelGap ), //
+            getPanelAt( point.x + defaultPanelGap, point.y ), //
+            getPanelAt( point.x - defaultPanelGap, point.y ), //
+            getPanelAt( point ) //
+        );
+    }
 }

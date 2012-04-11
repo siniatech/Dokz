@@ -10,14 +10,13 @@ import java.util.Set;
 
 import javax.swing.JMenuItem;
 
+import com.siniatech.dokz.DokzConstants;
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
 import com.siniatech.dokz.api.IDokzContext;
 
 public class DokzContext implements IDokzContext {
 
-    public static final int defaultPanelGap = 5;
-    
     private Map<DokzPanel, DokzPanelContext> panels = new HashMap<>();
     private Set<DokzContainer> containers = new HashSet<>();
     private DokzContainer mainContainer;
@@ -68,6 +67,6 @@ public class DokzContext implements IDokzContext {
     }
 
     public int getPanelGap() {
-        return defaultPanelGap;
+        return DokzConstants.defaultPanelGap;
     }
 }

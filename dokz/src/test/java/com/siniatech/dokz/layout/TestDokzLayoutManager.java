@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.siniatech.dokz.DokzConstants;
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzManager;
 import com.siniatech.dokz.DokzPanel;
@@ -64,13 +65,13 @@ public class TestDokzLayoutManager {
 
     @Test
     public void checkLayoutOfMainContainer() {
-        mainContainer.setSize( new Dimension( 1000 + defaultPanelGap, 600 + defaultPanelGap ) );
+        mainContainer.setSize( new Dimension( 1000 + DokzConstants.defaultPanelGap, 600 + DokzConstants.defaultPanelGap ) );
         layoutManager.layoutContainer( mainContainer );
         DokzContext dokzContext = mainContainer.getDokzContext();
         Set<Rectangle> expectedBounds = asSet( //
             new Rectangle( 0, 0, 500, 300 ), //
-            new Rectangle( 500 + defaultPanelGap, 0, 500, 300 ), //
-            new Rectangle( 0, 300 + defaultPanelGap, 1000 + defaultPanelGap, 300 ) //
+            new Rectangle( 500 + DokzConstants.defaultPanelGap, 0, 500, 300 ), //
+            new Rectangle( 0, 300 + DokzConstants.defaultPanelGap, 1000 + DokzConstants.defaultPanelGap, 300 ) //
         );
         Set<Rectangle> actualBounds = new HashSet<>();
         for ( DokzPanel panel : dokzContext.getPanels() ) {
