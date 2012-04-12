@@ -149,26 +149,54 @@ public class DokzResizeManager {
     }
 
     private void doNsBoundsCalc( Point point ) {
-        int yMove = point.y - startPoint.y;
-        for ( DokzPanel panel : westNorthPanels.keySet() ) {
-            Rectangle origBounds = westNorthPanels.get( panel );
-            panel.setBounds( origBounds.x, origBounds.y, origBounds.width, origBounds.height + yMove );
-        }
-        for ( DokzPanel panel : eastSouthPanels.keySet() ) {
-            Rectangle origBounds = eastSouthPanels.get( panel );
-            panel.setBounds( origBounds.x, origBounds.y + yMove, origBounds.width, origBounds.height - yMove );
+        if ( canDoNsResize( point ) ) {
+            int yMove = point.y - startPoint.y;
+            for ( DokzPanel panel : westNorthPanels.keySet() ) {
+                Rectangle origBounds = westNorthPanels.get( panel );
+                panel.setBounds( origBounds.x, origBounds.y, origBounds.width, origBounds.height + yMove );
+            }
+            for ( DokzPanel panel : eastSouthPanels.keySet() ) {
+                Rectangle origBounds = eastSouthPanels.get( panel );
+                panel.setBounds( origBounds.x, origBounds.y + yMove, origBounds.width, origBounds.height - yMove );
+            }
         }
     }
 
-    private void doEwBoundsCalc( Point point ) {
-        int xMove = point.x - startPoint.x;
+    private boolean canDoNsResize( Point point ) {
+        int yMove = point.y - startPoint.y;
+        boolean canDo = true;
         for ( DokzPanel panel : westNorthPanels.keySet() ) {
-            Rectangle origBounds = westNorthPanels.get( panel );
-            panel.setBounds( origBounds.x, origBounds.y, origBounds.width + xMove, origBounds.height );
+            canDo &= ( westNorthPanels.get( panel ).height + yMove ) > minPanelHeight;
         }
         for ( DokzPanel panel : eastSouthPanels.keySet() ) {
-            Rectangle origBounds = eastSouthPanels.get( panel );
-            panel.setBounds( origBounds.x + xMove, origBounds.y, origBounds.width - xMove, origBounds.height );
+            canDo &= ( eastSouthPanels.get( panel ).height - yMove ) > minPanelHeight;
+        }
+        return canDo;
+    }
+
+    private boolean canDoEwResize( Point point ) {
+        int xMove = point.x - startPoint.x;
+        boolean canDo = true;
+        for ( DokzPanel panel : westNorthPanels.keySet() ) {
+            canDo &= ( westNorthPanels.get( panel ).width + xMove ) > minPanelWidth;
+        }
+        for ( DokzPanel panel : eastSouthPanels.keySet() ) {
+            canDo &= ( eastSouthPanels.get( panel ).width - xMove ) > minPanelWidth;
+        }
+        return canDo;
+    }
+
+    private void doEwBoundsCalc( Point point ) {
+        if ( canDoEwResize( point ) ) {
+            int xMove = point.x - startPoint.x;
+            for ( DokzPanel panel : westNorthPanels.keySet() ) {
+                Rectangle origBounds = westNorthPanels.get( panel );
+                panel.setBounds( origBounds.x, origBounds.y, origBounds.width + xMove, origBounds.height );
+            }
+            for ( DokzPanel panel : eastSouthPanels.keySet() ) {
+                Rectangle origBounds = eastSouthPanels.get( panel );
+                panel.setBounds( origBounds.x + xMove, origBounds.y, origBounds.width - xMove, origBounds.height );
+            }
         }
     }
 
