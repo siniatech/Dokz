@@ -9,9 +9,11 @@ public class DokzPanel extends JPanel {
 
     private final JComponent buttonBar;
     private final JComponent contentPane;
+    private final String title;
 
     public DokzPanel( DokzManager dokzContainer, JComponent contentPane, String title ) {
         this.contentPane = contentPane;
+        this.title = title;
         this.buttonBar = dokzContainer.createButtonBarFor( this, title );
 
         setLayout( null );
@@ -26,5 +28,10 @@ public class DokzPanel extends JPanel {
         super.setBounds( x, y, width, height );
         buttonBar.setBounds( 0, 0, getWidth(), 16 );
         contentPane.setBounds( 0, 16, getWidth(), getHeight() - 16 );
+    }
+    
+    @Override
+    public String toString() {
+        return String.format( "{ DokzPanel : %s }", title );
     }
 }

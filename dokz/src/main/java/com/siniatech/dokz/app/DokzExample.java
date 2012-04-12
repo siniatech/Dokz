@@ -27,6 +27,11 @@ public class DokzExample extends JFrame {
         dokzContainer.add( component, "Pane" );
         dokzContainer.add( new JPanel(), "Pane2" );
         dokzContainer.add( new JPanel(), "Pane3" );
+        dokzContainer.add( new JPanel(), "Pane4" );
+        dokzContainer.add( new JPanel(), "Pane5" );
+        dokzContainer.add( new JPanel(), "Pane6" );
+        dokzContainer.add( new JPanel(), "Pane7" );
+        dokzContainer.add( new JPanel(), "Pane8" );
 
         JMenu menu = new JMenu( "Windows" );
         for ( JMenuItem menuItem : dokzContainer.getDokzContext().getPanelStateMenuItems() ) {

@@ -1,13 +1,19 @@
 package com.siniatech.dokz;
 
+import static com.siniatech.dokz.DokzConstants.*;
+import static com.siniatech.siniautils.collection.CollectionHelper.*;
+import static com.siniatech.siniautils.collection.SetHelper.*;
+import static com.siniatech.siniautils.swing.BoundsHelper.*;
+
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import com.siniatech.siniautils.fn.IResponse0;
-import com.siniatech.siniautils.set.SetHelper;
+import com.siniatech.siniautils.fn.IResponse1;
 
 public class DokzResizeManager {
 
@@ -16,7 +22,7 @@ public class DokzResizeManager {
     private final Map<DokzPanel, Rectangle> eastSouthPanels = new HashMap<>();
 
     private Point startPoint;
-    private ResizeDirection direction;
+    private Direction direction;
 
     public DokzResizeManager( IResponse0 invalidateResponse ) {
         this.invalidateResponse = invalidateResponse;
@@ -33,28 +39,111 @@ public class DokzResizeManager {
         eastSouthPanels.clear();
     }
 
-    public void startResize( Point startPoint, DokzNeighbourContext panelsAround, Set<DokzPanel> panelsIn ) {
+    public void startResize( Point startPoint, DokzNeighbourContext panelsAround, Set<DokzPanel> panels ) {
         this.startPoint = startPoint;
-        this.direction = isEwResize( panelsAround ) ? ResizeDirection.ew : ResizeDirection.ns;
+        this.direction = isEwResize( panelsAround ) ? Direction.ew : Direction.ns;
 
-        // need to get all along axis
-        if ( direction == ResizeDirection.ew ) {
-            westNorthPanels.put( panelsAround.getWest(), panelsAround.getWest().getBounds() );
-            eastSouthPanels.put( panelsAround.getEast(), panelsAround.getEast().getBounds() );
+        if ( direction == Direction.ew ) {
+            addAdjacentPanelsOnNsAxis( panelsAround.getWest(), Direction.e, panels, westNorthPanels );
+            addAdjacentPanelsOnNsAxis( panelsAround.getEast(), Direction.w, panels, eastSouthPanels );
         } else {
-            westNorthPanels.put( panelsAround.getNorth(), panelsAround.getNorth().getBounds() );
-            eastSouthPanels.put( panelsAround.getSouth(), panelsAround.getSouth().getBounds() );
+            addAdjacentPanelsOnEwAxis( panelsAround.getNorth(), Direction.n, panels, westNorthPanels );
+            addAdjacentPanelsOnEwAxis( panelsAround.getSouth(), Direction.s, panels, eastSouthPanels );
+        }
+    }
+
+    private void addAdjacentPanelsOnNsAxis( DokzPanel panel, Direction side, Set<DokzPanel> panels, Map<DokzPanel, Rectangle> panelToBounds ) {
+        panelToBounds.put( panel, panel.getBounds() );
+        addAdjacentPanelsOnNAxis( panel, side, panels, panelToBounds );
+        addAdjacentPanelsOnSAxis( panel, side, panels, panelToBounds );
+    }
+
+    private void addAdjacentPanelsOnEwAxis( DokzPanel panel, Direction side, Set<DokzPanel> panels, Map<DokzPanel, Rectangle> panelToBounds ) {
+        panelToBounds.put( panel, panel.getBounds() );
+        addAdjacentPanelsOnEAxis( panel, side, panels, panelToBounds );
+        addAdjacentPanelsOnWAxis( panel, side, panels, panelToBounds );
+    }
+
+    private void addAdjacentPanelsOnEAxis( DokzPanel panel, final Direction side, final Set<DokzPanel> panels, final Map<DokzPanel, Rectangle> panelToBounds ) {
+        int x = getCoordOfPanelSide( panel, Direction.e ) + defaultPanelGap + 1;
+        int y = getCoordOfPanelSide( panel, side );
+        addAdjacentPanels( side, panels, panelToBounds, x, y, y, new IResponse1<DokzPanel>() {
+            @Override
+            public void respond( DokzPanel adjacentPanel ) {
+                addAdjacentPanelsOnEAxis( adjacentPanel, side, panels, panelToBounds );
+            }
+        } );
+    }
+
+    private void addAdjacentPanelsOnWAxis( DokzPanel panel, final Direction side, final Set<DokzPanel> panels, final Map<DokzPanel, Rectangle> panelToBounds ) {
+        int x = getCoordOfPanelSide( panel, Direction.w ) - defaultPanelGap - 1;
+        int y = getCoordOfPanelSide( panel, side );
+        addAdjacentPanels( side, panels, panelToBounds, x, y, y, new IResponse1<DokzPanel>() {
+            @Override
+            public void respond( DokzPanel adjacentPanel ) {
+                addAdjacentPanelsOnWAxis( adjacentPanel, side, panels, panelToBounds );
+            }
+        } );
+    }
+
+    private void addAdjacentPanelsOnSAxis( DokzPanel panel, final Direction side, final Set<DokzPanel> panels, final Map<DokzPanel, Rectangle> panelToBounds ) {
+        int x = getCoordOfPanelSide( panel, side );
+        int y = getCoordOfPanelSide( panel, Direction.s ) + defaultPanelGap + 1;
+        addAdjacentPanels( side, panels, panelToBounds, x, y, x, new IResponse1<DokzPanel>() {
+            @Override
+            public void respond( DokzPanel adjacentPanel ) {
+                addAdjacentPanelsOnSAxis( adjacentPanel, side, panels, panelToBounds );
+            }
+        } );
+    }
+
+    private void addAdjacentPanelsOnNAxis( DokzPanel panel, final Direction side, final Set<DokzPanel> panels, final Map<DokzPanel, Rectangle> panelToBounds ) {
+        int x = getCoordOfPanelSide( panel, side );
+        int y = getCoordOfPanelSide( panel, Direction.n ) - defaultPanelGap - 1;
+        addAdjacentPanels( side, panels, panelToBounds, x, y, x, new IResponse1<DokzPanel>() {
+            @Override
+            public void respond( DokzPanel adjacentPanel ) {
+                addAdjacentPanelsOnNAxis( adjacentPanel, side, panels, panelToBounds );
+            }
+        } );
+    }
+
+    private void addAdjacentPanels( final Direction side, final Set<DokzPanel> panels, final Map<DokzPanel, Rectangle> panelToBounds, int x, int y, int z, IResponse1<DokzPanel> response ) {
+        Collection<DokzPanel> componentsContaining = getComponentsContaining( panels, new Point( x, y ) );
+        if ( !componentsContaining.isEmpty() ) {
+            assert componentsContaining.size() == 1;
+            DokzPanel adjacentPanel = getArbitraryMember( componentsContaining );
+            if ( getCoordOfPanelSide( adjacentPanel, side ) == z ) {
+                panelToBounds.put( adjacentPanel, adjacentPanel.getBounds() );
+                response.respond( adjacentPanel );
+            }
+        }
+    }
+
+    private int getCoordOfPanelSide( DokzPanel panel, Direction side ) {
+        Rectangle bounds = panel.getBounds();
+        switch ( side ) {
+            case w :
+                return bounds.x;
+            case e :
+                return (int) ( bounds.getMaxX() - 1 );
+            case n :
+                return bounds.y;
+            case s :
+                return (int) ( bounds.getMaxY() - 1 );
+            default:
+                throw new IllegalStateException( "Direction must be singular" );
         }
     }
 
     public void doResize( Point point ) {
-        if ( direction == ResizeDirection.ew ) {
+        if ( direction == Direction.ew ) {
             doEwBoundsCalc( point );
         } else {
             doNsBoundsCalc( point );
         }
         invalidateResponse.respond();
-        for ( DokzPanel panel : SetHelper.union( westNorthPanels.keySet(), eastSouthPanels.keySet() ) ) {
+        for ( DokzPanel panel : union( westNorthPanels.keySet(), eastSouthPanels.keySet() ) ) {
             panel.validate();
         }
     }
@@ -96,8 +185,12 @@ public class DokzResizeManager {
         return panelsAround.getEast() != null && panelsAround.getWest() != null;
     }
 
-    private enum ResizeDirection {
+    private enum Direction {
         ew,
-        ns
+        ns,
+        n,
+        s,
+        e,
+        w
     }
 }
