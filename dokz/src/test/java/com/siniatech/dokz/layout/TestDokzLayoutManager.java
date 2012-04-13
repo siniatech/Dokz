@@ -1,6 +1,5 @@
 package com.siniatech.dokz.layout;
 
-import static com.siniatech.dokz.context.DokzContext.*;
 import static com.siniatech.siniautils.collection.SetHelper.*;
 import static junit.framework.Assert.*;
 
