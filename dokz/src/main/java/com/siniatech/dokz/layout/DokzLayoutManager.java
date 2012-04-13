@@ -49,7 +49,7 @@ public class DokzLayoutManager implements LayoutManager {
     @Override
     public void layoutContainer( Container parent ) {
         Set<DokzPanel> currentComponents = getPanels( (DokzContainer) parent );
-        if ( lastLaidOutComponents == currentComponents ) {
+        if ( lastLaidOutComponents.equals( currentComponents ) ) {
             layoutSameComponents( parent );
         } else {
             layoutNewComponents( parent, currentComponents );
