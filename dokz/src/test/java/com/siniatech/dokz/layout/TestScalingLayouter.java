@@ -235,4 +235,33 @@ public class TestScalingLayouter {
         assertEquals( new Rectangle( 100, 0, 100, 100 ), c2.getBounds() );
         assertEquals( new Rectangle( 100, 100, 100, 100 ), c3.getBounds() );
     }
+    
+    @Test
+    public void testObservedBug() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 0, 50, 50 );
+        Component c3 = new JPanel();
+        c3.setBounds( 100, 0, 50, 50 );
+        Component c4 = new JPanel();
+        c4.setBounds( 0, 50, 50, 50 );
+        Component c5 = new JPanel();
+        c5.setBounds( 50, 50, 50, 50 );
+        Component c6 = new JPanel();
+        c6.setBounds( 100, 50, 50, 50 );
+        Component c7 = new JPanel();
+        c7.setBounds( 0, 100, 50, 50 );
+        Component c8 = new JPanel();
+        c8.setBounds( 50, 100, 100, 50 );
+        layouter.doLayout( Arrays.asList( c1, c2, c3, c4, c5, c6, c7, c8 ), new Dimension( 300, 300 ) );
+        assertEquals( new Rectangle( 0, 0, 100, 100 ), c1.getBounds() );
+        assertEquals( new Rectangle( 100, 0, 100, 100 ), c2.getBounds() );
+        assertEquals( new Rectangle( 200, 0, 100, 100 ), c3.getBounds() );
+        assertEquals( new Rectangle( 0, 100, 100, 100 ), c4.getBounds() );
+        assertEquals( new Rectangle( 100, 100, 100, 100 ), c5.getBounds() );
+        assertEquals( new Rectangle( 200, 100, 100, 100 ), c6.getBounds() );
+        assertEquals( new Rectangle( 0, 200, 100, 100 ), c7.getBounds() );
+        assertEquals( new Rectangle( 100, 200, 200, 100 ), c8.getBounds() );
+    }
 }
