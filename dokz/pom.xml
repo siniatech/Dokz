@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.siniatech</groupId>
-  <artifactId>dokz</artifactId>
-  <version>0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.siniatech</groupId>
+	<artifactId>dokz</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>dokz</name>
-  <url>http://maven.apache.org</url>
+	<name>dokz</name>
+	<url>http://maven.apache.org</url>
 
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -30,4 +30,41 @@
 		</dependency>
 	</dependencies>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.5.6.201201232323</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.5.6.201201232323</version>
+				<executions>
+					<!-- SIF - Eclipse marks this as an error, but it works fine! -->
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<propertyName>coverageAgent</propertyName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>-Xmx256m ${coverageAgent}</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
