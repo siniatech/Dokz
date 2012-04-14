@@ -6,8 +6,7 @@ import java.util.Collection;
 
 public interface ILayouter {
 
-    void doLayout( Collection<? extends Component> components, Dimension size );
+    <T extends Component> void doLayout( Collection<T> components, Dimension size );
 
-    // make tiling layouter implement
-    void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap );
+    <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap );
 }

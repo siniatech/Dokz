@@ -25,7 +25,7 @@ import com.siniatech.siniautils.fn.IFunction1;
 public class ScalingLayouter extends AbstractLayouter {
 
     @Override
-    public void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
         if ( components.size() > 0 ) {
             doRoughScaledLayout( components, size );
             correctGapsAndBorders( components, size, hGap, vGap );

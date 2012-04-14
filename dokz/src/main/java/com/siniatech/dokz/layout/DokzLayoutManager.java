@@ -18,6 +18,7 @@ public class DokzLayoutManager implements LayoutManager {
 
     static private final ILayouter scalingLayouter = new ScalingLayouter();
     static private final ILayouter tilingLayouter = new TilingLayouter();
+    static private final ILayouter removingLayouter = new RemovingLayouter();
 
     private final DokzContext dokzContext;
 
@@ -52,13 +53,18 @@ public class DokzLayoutManager implements LayoutManager {
         if ( lastLaidOutComponents.equals( currentComponents ) ) {
             layoutSameComponents( parent );
         } else {
-            layoutNewComponents( parent, currentComponents );
+            layoutRemainingComponents( parent, currentComponents );
         }
         lastLaidOutComponents = currentComponents;
     }
 
-    private void layoutNewComponents( Container parent, Set<DokzPanel> currentComponents ) {
-        tilingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+    private void layoutRemainingComponents( Container parent, Set<DokzPanel> currentComponents ) {
+        if ( currentComponents.size() > lastLaidOutComponents.size() ) {
+            assert lastLaidOutComponents.isEmpty();
+            tilingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+        } else {
+            removingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+        }
     }
 
     private void layoutSameComponents( Container parent ) {

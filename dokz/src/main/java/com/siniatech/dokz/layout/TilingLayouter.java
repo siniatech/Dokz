@@ -13,7 +13,7 @@ import java.util.Map;
 public class TilingLayouter extends AbstractLayouter {
 
     @Override
-    public void doLayout( Collection<? extends Component> components, Dimension size, int hGap, int vGap ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
         int xSide = (int) ceil( sqrt( components.size() ) );
         if ( xSide != 0 ) {
             Map<Point, Rectangle> coordToBounds = determineBoundsOfGrid( components, size, hGap, vGap, xSide );

@@ -7,7 +7,7 @@ import java.util.Collection;
 abstract public class AbstractLayouter implements ILayouter {
 
     @Override
-    public void doLayout( Collection<? extends Component> components, Dimension size ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size ) {
         doLayout( components, size, 0, 0 );
     }
 
