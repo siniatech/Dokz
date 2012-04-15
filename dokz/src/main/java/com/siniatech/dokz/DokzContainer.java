@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.layout.DokzLayoutManager;
+import com.siniatech.dokz.resize.DokzResizeManager;
 import com.siniatech.siniautils.fn.IResponse0;
 
 public class DokzContainer extends JPanel {

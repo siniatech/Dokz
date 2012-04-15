@@ -1,4 +1,4 @@
-package com.siniatech.dokz;
+package com.siniatech.dokz.resize;
 
 import static com.siniatech.dokz.DokzConstants.*;
 import static com.siniatech.siniautils.collection.CollectionHelper.*;
@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.siniatech.dokz.DokzNeighbourContext;
+import com.siniatech.dokz.DokzPanel;
 import com.siniatech.siniautils.fn.IResponse0;
 import com.siniatech.siniautils.fn.IResponse1;
 
@@ -40,6 +42,7 @@ public class DokzResizeManager {
     }
 
     public void startResize( Point startPoint, DokzNeighbourContext panelsAround, Set<DokzPanel> panels ) {
+        assert canStartResize( panelsAround );
         this.startPoint = startPoint;
         this.direction = isEwResize( panelsAround ) ? Direction.ew : Direction.ns;
 
