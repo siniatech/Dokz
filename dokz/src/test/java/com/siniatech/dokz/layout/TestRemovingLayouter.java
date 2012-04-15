@@ -28,6 +28,12 @@ public class TestRemovingLayouter {
         assertEquals( new Rectangle( 0, 0, 100, 50 ), c1.getBounds() );
     }
 
-
+    @Test
+    public void shouldFillEntireWithOneCompV() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        layouter.doLayout( Arrays.asList( c1 ), new Dimension( 50, 100 ) );
+        assertEquals( new Rectangle( 0, 0, 50, 100 ), c1.getBounds() );
+    }
 
 }

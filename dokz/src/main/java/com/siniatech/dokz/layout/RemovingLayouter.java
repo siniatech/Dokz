@@ -31,7 +31,7 @@ public class RemovingLayouter extends AbstractLayouter {
     }
 
     private void extendComponentsToFillFullWidthGap( Collection<? extends Component> components, Rectangle gap, Dimension size, int vGap ) {
-        if (gap.y > 0) {
+        if ( gap.y > 0 ) {
             extendComponentsToFillFullWidthGapDown( components, gap, size, vGap );
         } else {
             extendComponentsToFillFullWidthGapUp( components, gap, size, vGap );
@@ -45,7 +45,7 @@ public class RemovingLayouter extends AbstractLayouter {
     }
 
     private void extendComponentsToFillFullWidthGapDown( Collection<? extends Component> components, Rectangle gap, Dimension size, int vGap ) {
-        for ( Component component : getComponentsCrossingY( components, gap.y - vGap -1 ) ) {
+        for ( Component component : getComponentsCrossingY( components, gap.y - vGap - 1 ) ) {
             expandDown( gap, vGap, component, component.getBounds() );
         }
     }
@@ -56,10 +56,10 @@ public class RemovingLayouter extends AbstractLayouter {
     }
 
     private void extendComponentsToFillFullHeightGap( Collection<? extends Component> components, Rectangle gap, Dimension size, int hGap ) {
-        if (gap.x > 0) {
-            extendComponentsToFillFullWidthGapLeft( components, gap, size, hGap );
-        } else {
+        if ( gap.x > 0 ) {
             extendComponentsToFillFullWidthGapRight( components, gap, size, hGap );
+        } else {
+            extendComponentsToFillFullWidthGapLeft( components, gap, size, hGap );
         }
     }
 
@@ -68,7 +68,7 @@ public class RemovingLayouter extends AbstractLayouter {
             expandLeft( gap, hGap, component, component.getBounds() );
         }
     }
-    
+
     private void extendComponentsToFillFullWidthGapRight( Collection<? extends Component> components, Rectangle gap, Dimension size, int hGap ) {
         for ( Component component : getComponentsCrossingX( components, gap.x - hGap - 1 ) ) {
             expandRight( gap, hGap, component, component.getBounds() );
@@ -121,14 +121,14 @@ public class RemovingLayouter extends AbstractLayouter {
         if ( x >= 0 ) {
             Component compToLeft = getComponentContaining( components, new Point( x, y ) );
             if ( compToLeft != null && alignsHorizontally( compToLeft.getBounds(), gap ) ) {
-                expandLeft( gap, hGap, compToLeft, compToLeft.getBounds() );
+                expandRight( gap, hGap, compToLeft, compToLeft.getBounds() );
                 return true;
             }
         }
         return false;
     }
 
-    private void expandLeft( Rectangle gap, int hGap, Component compToLeft, Rectangle bounds ) {
+    private void expandRight( Rectangle gap, int hGap, Component compToLeft, Rectangle bounds ) {
         int width = bounds.width + gap.width + hGap;
         compToLeft.setBounds( bounds.x, bounds.y, width, bounds.height );
     }
@@ -139,14 +139,14 @@ public class RemovingLayouter extends AbstractLayouter {
         if ( x <= size.width ) {
             Component compToRight = getComponentContaining( components, new Point( x, y ) );
             if ( compToRight != null && alignsHorizontally( compToRight.getBounds(), gap ) ) {
-                expandRight( gap, hGap, compToRight, compToRight.getBounds() );
+                expandLeft( gap, hGap, compToRight, compToRight.getBounds() );
                 return true;
             }
         }
         return false;
     }
 
-    private void expandRight( Rectangle gap, int hGap, Component compToRight, Rectangle bounds ) {
+    private void expandLeft( Rectangle gap, int hGap, Component compToRight, Rectangle bounds ) {
         int width = bounds.width + gap.width + hGap;
         int newX = bounds.x - gap.width - hGap;
         compToRight.setBounds( newX, bounds.y, width, bounds.height );
