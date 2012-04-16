@@ -28,4 +28,40 @@ public class TestDokzResizeManager {
         dokzResizeManager.endResize();
         assertFalse( dokzResizeManager.isResizeStarted() );
     }
+
+    @Test
+    public void cannotResizeIfOverPanel() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), new MockDokzPanel() );
+        assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
+
+    @Test
+    public void cannotResizeIfNoNeighbours() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, null, null, null );
+        assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
+
+    @Test
+    public void cannotResizeIfOneEwNeighbour() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), null, null );
+        assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
+
+    @Test
+    public void cannotResizeIfOneNsNeighbour() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, new MockDokzPanel(), null, null, null );
+        assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
+
+    @Test
+    public void canResizeIfHaveEwNeighbours() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), null );
+        assertTrue( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
+
+    @Test
+    public void canResizeIfHaveNsNeighbours() {
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( new MockDokzPanel(), new MockDokzPanel(), null, null, null );
+        assertTrue( dokzResizeManager.canStartResize( neighbourContext ) );
+    }
 }
