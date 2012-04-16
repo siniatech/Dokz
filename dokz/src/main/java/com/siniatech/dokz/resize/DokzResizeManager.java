@@ -169,10 +169,10 @@ public class DokzResizeManager {
         int yMove = point.y - startPoint.y;
         boolean canDo = true;
         for ( DokzPanel panel : westNorthPanels.keySet() ) {
-            canDo &= ( westNorthPanels.get( panel ).height + yMove ) > minPanelHeight;
+            canDo &= ( westNorthPanels.get( panel ).height + yMove ) >= minPanelHeight;
         }
         for ( DokzPanel panel : eastSouthPanels.keySet() ) {
-            canDo &= ( eastSouthPanels.get( panel ).height - yMove ) > minPanelHeight;
+            canDo &= ( eastSouthPanels.get( panel ).height - yMove ) >= minPanelHeight;
         }
         return canDo;
     }
@@ -181,10 +181,10 @@ public class DokzResizeManager {
         int xMove = point.x - startPoint.x;
         boolean canDo = true;
         for ( DokzPanel panel : westNorthPanels.keySet() ) {
-            canDo &= ( westNorthPanels.get( panel ).width + xMove ) > minPanelWidth;
+            canDo &= ( westNorthPanels.get( panel ).width + xMove ) >= minPanelWidth;
         }
         for ( DokzPanel panel : eastSouthPanels.keySet() ) {
-            canDo &= ( eastSouthPanels.get( panel ).width - xMove ) > minPanelWidth;
+            canDo &= ( eastSouthPanels.get( panel ).width - xMove ) >= minPanelWidth;
         }
         return canDo;
     }
