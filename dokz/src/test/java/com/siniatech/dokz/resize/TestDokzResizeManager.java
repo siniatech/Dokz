@@ -386,5 +386,165 @@ public class TestDokzResizeManager {
         assertEquals( new Rectangle( 0, 0, 500, 200 ), p1.getBounds() );
         assertEquals( new Rectangle( 0, 200, 500, 800 ), p2.getBounds() );
     }
+    
+    @Test
+    public void resizeSAffectsAdjacentPanels() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 250, 550 ) );
+        assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
+        assertEquals( new Rectangle( 500, 0, 500, 550 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 550, 500, 450 ), p3.getBounds() );
+        assertEquals( new Rectangle( 500, 550, 500, 450 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
+        assertEquals( new Rectangle( 500, 0, 500, 550 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 550, 500, 450 ), p3.getBounds() );
+        assertEquals( new Rectangle( 500, 550, 500, 450 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeNAffectsAdjacentPanels() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 250, 350 ) );
+        assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
+        assertEquals( new Rectangle( 500, 0, 500, 350 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 350, 500, 650 ), p3.getBounds() );
+        assertEquals( new Rectangle( 500, 350, 500, 650 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
+        assertEquals( new Rectangle( 500, 0, 500, 350 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 350, 500, 650 ), p3.getBounds() );
+        assertEquals( new Rectangle( 500, 350, 500, 650 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeWAffectsAdjacentPanels() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext(  null, null, p2, p1, null );
+        dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 400, 750 ) );
+        assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 400, 0, 600, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 500, 400, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 400, 500, 600, 500 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 400, 0, 600, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 500, 400, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 400, 500, 600, 500 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeEAffectsAdjacentPanels() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext(  null, null, p2, p1, null );
+        dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 800, 750 ) );
+        assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 800, 0, 200, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 500, 800, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 800, 500, 200, 500 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 800, 0, 200, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 500, 800, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 800, 500, 200, 500 ), p4.getBounds() );
+    }
+    @Test
+    public void resizeSAffectsAdjacentPanelsWithGap() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        dokzResizeManager.startResize( new Point( 250, 502 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 250, 552 ) );
+        assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
+        assertEquals( new Rectangle( 505, 0, 500, 550 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 555, 500, 450 ), p3.getBounds() );
+        assertEquals( new Rectangle( 505, 555, 500, 450 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
+        assertEquals( new Rectangle( 505, 0, 500, 550 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 555, 500, 450 ), p3.getBounds() );
+        assertEquals( new Rectangle( 505, 555, 500, 450 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeNAffectsAdjacentPanelsWithGap() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        dokzResizeManager.startResize( new Point( 250, 501 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 250, 351 ) );
+        assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
+        assertEquals( new Rectangle( 505, 0, 500, 350 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 355, 500, 650 ), p3.getBounds() );
+        assertEquals( new Rectangle( 505, 355, 500, 650 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
+        assertEquals( new Rectangle( 505, 0, 500, 350 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 355, 500, 650 ), p3.getBounds() );
+        assertEquals( new Rectangle( 505, 355, 500, 650 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeWAffectsAdjacentPanelsWithGap() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext(  null, null, p2, p1, null );
+        dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 400, 750 ) );
+        assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 405, 0, 600, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 505, 400, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 405, 505, 600, 500 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 405, 0, 600, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 505, 400, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 405, 505, 600, 500 ), p4.getBounds() );
+    }
+    
+    @Test
+    public void resizeEAffectsAdjacentPanelsWithGap() {
+        DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
+        DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
+        DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
+        DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
+        DokzNeighbourContext neighbourContext = new DokzNeighbourContext(  null, null, p2, p1, null );
+        dokzResizeManager.startResize( new Point( 500, 753 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
+        dokzResizeManager.doResize( new Point( 800, 753 ) );
+        assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 805, 0, 200, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 505, 800, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 805, 505, 200, 500 ), p4.getBounds() );
+        dokzResizeManager.endResize();
+        assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );
+        assertEquals( new Rectangle( 805, 0, 200, 500 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 505, 800, 500 ), p3.getBounds() );
+        assertEquals( new Rectangle( 805, 505, 200, 500 ), p4.getBounds() );
+    }
 
+    
 }
