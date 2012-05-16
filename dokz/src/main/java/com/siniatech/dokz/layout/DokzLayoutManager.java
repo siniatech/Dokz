@@ -6,13 +6,18 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
+import com.siniatech.dokz.DokzPanelState;
 import com.siniatech.dokz.context.DokzContext;
+import com.siniatech.siniautils.collection.CollectionHelper;
+import com.siniatech.siniautils.fn.IConditional;
+import com.siniatech.siniautils.fn.Tuple2;
 
 public class DokzLayoutManager implements LayoutManager {
 
@@ -23,6 +28,7 @@ public class DokzLayoutManager implements LayoutManager {
     private final DokzContext dokzContext;
 
     private Collection<DokzPanel> lastLaidOutComponents;
+    private Tuple2<DokzPanel, Rectangle> lastMaxedPanel;
 
     public DokzLayoutManager( DokzContext dokzContainerContext ) {
         this.dokzContext = dokzContainerContext;
@@ -49,11 +55,49 @@ public class DokzLayoutManager implements LayoutManager {
 
     @Override
     public void layoutContainer( Container parent ) {
-        Set<DokzPanel> currentComponents = getPanels( (DokzContainer) parent );
-        if ( lastLaidOutComponents.equals( currentComponents ) ) {
-            layoutSameComponents( parent );
+        DokzContainer dokzContainer = (DokzContainer) parent;
+        if ( hasMaximizedChild( dokzContainer ) ) {
+            layoutWithMaximizedChild( dokzContainer );
         } else {
-            layoutRemainingComponents( parent, currentComponents );
+            restoreMaxedChildIfPresent( dokzContainer );
+            layoutWithoutMaximizedChild( dokzContainer );
+        }
+    }
+
+    private void restoreMaxedChildIfPresent( DokzContainer dokzContainer ) {
+        if ( lastMaxedPanel != null ) {
+            lastMaxedPanel._1().setBounds( lastMaxedPanel._2().getBounds() );
+            dokzContainer.setComponentZOrder( lastMaxedPanel._1(), 5 );
+            lastMaxedPanel = null;
+        }
+    }
+
+    private boolean hasMaximizedChild( DokzContainer dokzContainer ) {
+        return CollectionHelper.exists( getPanels( dokzContainer ), isMaximized() );
+    }
+
+    private IConditional<DokzPanel> isMaximized() {
+        return new IConditional<DokzPanel>() {
+            @Override
+            public Boolean apply( DokzPanel t ) {
+                return dokzContext.getPanelContext( t ).getState() == DokzPanelState.maxed;
+            }
+        };
+    }
+
+    private void layoutWithMaximizedChild( DokzContainer dokzContainer ) {
+        DokzPanel maxedPanel = CollectionHelper.find( getPanels( dokzContainer ), isMaximized() );
+        lastMaxedPanel = new Tuple2<>( maxedPanel, maxedPanel.getBounds() );
+        maxedPanel.setBounds( 0, 0, dokzContainer.getWidth(), dokzContainer.getHeight() );
+        dokzContainer.setComponentZOrder( maxedPanel, 0 );
+    }
+
+    private void layoutWithoutMaximizedChild( DokzContainer dokzContainer ) {
+        Set<DokzPanel> currentComponents = getPanels( dokzContainer );
+        if ( lastLaidOutComponents.equals( currentComponents ) ) {
+            layoutSameComponents( dokzContainer );
+        } else {
+            layoutRemainingComponents( dokzContainer, currentComponents );
         }
         lastLaidOutComponents = currentComponents;
     }

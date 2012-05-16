@@ -2,22 +2,24 @@ package com.siniatech.dokz.context;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JMenuItem;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.siniatech.dokz.DokzConstants;
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
 import com.siniatech.dokz.api.IDokzContext;
+import com.siniatech.siniautils.collection.CollectionHelper;
+import com.siniatech.siniautils.fn.IConditional;
 
 public class DokzContext implements IDokzContext {
 
-    private Map<DokzPanel, DokzPanelContext> panels = new HashMap<>();
+    private BiMap<DokzPanel, DokzPanelContext> panels = HashBiMap.create();
     private Set<DokzContainer> containers = new HashSet<>();
     private DokzContainer mainContainer;
 
@@ -31,6 +33,10 @@ public class DokzContext implements IDokzContext {
 
     public DokzPanelContext getPanelContext( DokzPanel panel ) {
         return panels.get( panel );
+    }
+
+    public DokzPanel getPanel( DokzPanelContext panelContext ) {
+        return panels.inverse().get( panelContext );
     }
 
     public void add( DokzPanel panel, DokzContainer container, DokzPanelContext context ) {
@@ -68,5 +74,18 @@ public class DokzContext implements IDokzContext {
 
     public int getPanelGap() {
         return DokzConstants.defaultPanelGap;
+    }
+
+    public void toggleMaximized( DokzPanel dokzPanel ) {
+        getPanelContext( dokzPanel ).toggleMaximized();
+    }
+
+    public DokzContainer getContainerFor( final DokzPanel dokzPanel ) {
+        return CollectionHelper.find( getContainers(), new IConditional<DokzContainer>() {
+            @Override
+            public Boolean apply( DokzContainer t ) {
+                return getPanelsIn( t ).contains( dokzPanel );
+            }
+        } );
     }
 }

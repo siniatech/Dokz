@@ -23,24 +23,8 @@ public class DokzManager implements IAmJComponent {
         IResponse0 onMax = new IResponse0() {
             @Override
             public void respond() {
-                DokzPanelContext context = dokzContext.getPanelContext( dokzPanel );
-                if ( context.getState() == DokzPanelState.open ) {
-                    context.setState( DokzPanelState.maxed );
-                    for ( DokzPanel panel : dokzContext.getPanels() ) {
-                        if ( panel != dokzPanel && dokzContext.getPanelContext( panel ).getState() == DokzPanelState.open ) {
-                            dokzContext.getMainContainer().remove( panel );
-                        }
-                    }
-                } else {
-                    assert context.getState() == DokzPanelState.maxed;
-                    context.setState( DokzPanelState.open );
-                    for ( DokzPanel panel : dokzContext.getPanels() ) {
-                        if ( panel != dokzPanel && dokzContext.getPanelContext( panel ).getState() == DokzPanelState.open ) {
-                            dokzContext.getMainContainer().add( panel );
-                        }
-                    }
-                }
-                dokzContext.getMainContainer().revalidate();
+                dokzContext.toggleMaximized( dokzPanel );
+                dokzContext.getContainerFor(dokzPanel).revalidate();
             }
         };
         IResponse0 onClose = new IResponse0() {

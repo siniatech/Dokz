@@ -52,4 +52,9 @@ public class DokzPanelContext {
         return this.container == container;
     }
 
+    public void toggleMaximized() {
+        assert state == DokzPanelState.open || state == DokzPanelState.maxed;
+        setState( state == DokzPanelState.open ? DokzPanelState.maxed : DokzPanelState.open );
+    }
+
 }
