@@ -32,7 +32,7 @@ public class TestDokzLayoutManager {
         dokz.add( new JPanel() );
         DokzContext dokzContext = (DokzContext) dokz.getDokzContext();
         mainContainer = dokzContext.getMainContainer();
-        layoutManager = new DokzLayoutManager( dokzContext );
+        layoutManager = new DokzLayoutManager( mainContainer, dokzContext );
     }
 
     @Test
