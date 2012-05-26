@@ -1,4 +1,6 @@
-package com.siniatech.dokz;
+package com.siniatech.dokz.context;
+
+import com.siniatech.dokz.DokzPanel;
 
 public class NeighbourContext {
 

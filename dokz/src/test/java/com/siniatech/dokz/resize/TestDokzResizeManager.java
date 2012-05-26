@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.siniatech.dokz.NeighbourContext;
 import com.siniatech.dokz.DokzPanel;
+import com.siniatech.dokz.context.NeighbourContext;
 import com.siniatech.dokz.test.fixtures.MockDokzPanel;
 import com.siniatech.siniautils.fn.ResponseHelper;
 

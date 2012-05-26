@@ -14,9 +14,11 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
 
     private final DokzContainer dokzContainer;
     private boolean dockingStarted;
+    private final DockingGlassPanel dockingGlassPanel;
 
     public DockingManager( DokzContainer dokzContainer ) {
         this.dokzContainer = dokzContainer;
+        this.dockingGlassPanel = new DockingGlassPanel();
     }
 
     public boolean canStartDocking( MouseEvent e ) {
@@ -24,7 +26,7 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
         return panel != null && //
             panel.isPointInButtonBar( convertPoint( dokzContainer, e.getPoint(), panel ) );
     }
-
+    
     public void startDocking() {
         dockingStarted = true;
         System.out.println( "START DOCKING" );

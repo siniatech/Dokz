@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.siniatech.dokz.NeighbourContext;
 import com.siniatech.dokz.DokzPanel;
+import com.siniatech.dokz.context.NeighbourContext;
 import com.siniatech.siniautils.fn.IResponse0;
 import com.siniatech.siniautils.fn.IResponse1;
 

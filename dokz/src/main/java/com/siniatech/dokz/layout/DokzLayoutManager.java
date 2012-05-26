@@ -29,9 +29,11 @@ public class DokzLayoutManager implements LayoutManager {
 
     private Collection<DokzPanel> lastLaidOutComponents;
     private Tuple2<DokzPanel, Rectangle> lastMaxedPanel;
+    private final DokzContainer dokzContainer;
 
-    public DokzLayoutManager( DokzContext dokzContainerContext ) {
-        this.dokzContext = dokzContainerContext;
+    public DokzLayoutManager( DokzContainer dokzContainer, DokzContext dokzContext ) {
+        this.dokzContainer = dokzContainer;
+        this.dokzContext = dokzContext;
         this.lastLaidOutComponents = new HashSet<>();
     }
 
@@ -55,16 +57,16 @@ public class DokzLayoutManager implements LayoutManager {
 
     @Override
     public void layoutContainer( Container parent ) {
-        DokzContainer dokzContainer = (DokzContainer) parent;
-        if ( hasMaximizedChild( dokzContainer ) ) {
-            layoutWithMaximizedChild( dokzContainer );
+        assert dokzContainer == parent;
+        if ( hasMaximizedChild() ) {
+            layoutWithMaximizedChild();
         } else {
-            restoreMaxedChildIfPresent( dokzContainer );
-            layoutWithoutMaximizedChild( dokzContainer );
+            restoreMaxedChildIfPresent();
+            layoutWithoutMaximizedChild();
         }
     }
 
-    private void restoreMaxedChildIfPresent( DokzContainer dokzContainer ) {
+    private void restoreMaxedChildIfPresent() {
         if ( lastMaxedPanel != null ) {
             lastMaxedPanel._1().setBounds( lastMaxedPanel._2().getBounds() );
             dokzContainer.setComponentZOrder( lastMaxedPanel._1(), 5 );
@@ -72,8 +74,8 @@ public class DokzLayoutManager implements LayoutManager {
         }
     }
 
-    private boolean hasMaximizedChild( DokzContainer dokzContainer ) {
-        return CollectionHelper.exists( getPanels( dokzContainer ), isMaximized() );
+    private boolean hasMaximizedChild() {
+        return CollectionHelper.exists( getPanels(), isMaximized() );
     }
 
     private IConditional<DokzPanel> isMaximized() {
@@ -85,43 +87,43 @@ public class DokzLayoutManager implements LayoutManager {
         };
     }
 
-    private void layoutWithMaximizedChild( DokzContainer dokzContainer ) {
-        DokzPanel maxedPanel = CollectionHelper.find( getPanels( dokzContainer ), isMaximized() );
+    private void layoutWithMaximizedChild() {
+        DokzPanel maxedPanel = CollectionHelper.find( getPanels(), isMaximized() );
         lastMaxedPanel = new Tuple2<>( maxedPanel, maxedPanel.getBounds() );
         maxedPanel.setBounds( 0, 0, dokzContainer.getWidth(), dokzContainer.getHeight() );
         dokzContainer.setComponentZOrder( maxedPanel, 0 );
     }
 
-    private void layoutWithoutMaximizedChild( DokzContainer dokzContainer ) {
-        Set<DokzPanel> currentComponents = getPanels( dokzContainer );
+    private void layoutWithoutMaximizedChild() {
+        Set<DokzPanel> currentComponents = getPanels();
         if ( lastLaidOutComponents.equals( currentComponents ) ) {
-            layoutSameComponents( dokzContainer );
+            layoutSameComponents();
         } else {
-            layoutRemainingComponents( dokzContainer, currentComponents );
+            layoutRemainingComponents( currentComponents );
         }
         lastLaidOutComponents = currentComponents;
     }
 
-    private void layoutRemainingComponents( Container parent, Set<DokzPanel> currentComponents ) {
+    private void layoutRemainingComponents( Set<DokzPanel> currentComponents ) {
         if ( currentComponents.size() > lastLaidOutComponents.size() ) {
             assert lastLaidOutComponents.isEmpty();
-            tilingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+            tilingLayouter.doLayout( currentComponents, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
         } else {
-            removingLayouter.doLayout( currentComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+            removingLayouter.doLayout( currentComponents, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
         }
     }
 
-    private void layoutSameComponents( Container parent ) {
-        if ( getExtentOfComponents( lastLaidOutComponents ) != parent.getSize() ) {
-            scalingLayouter.doLayout( lastLaidOutComponents, parent.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+    private void layoutSameComponents() {
+        if ( getExtentOfComponents( lastLaidOutComponents ) != dokzContainer.getSize() ) {
+            scalingLayouter.doLayout( lastLaidOutComponents, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
         }
         // else do nothing
     }
 
-    private Set<DokzPanel> getPanels( DokzContainer parent ) {
+    private Set<DokzPanel> getPanels() {
         Set<DokzPanel> panels = new HashSet<>();
         for ( DokzPanel panel : dokzContext.getPanels() ) {
-            if ( dokzContext.getPanelContext( panel ).isVisibleIn( parent ) ) {
+            if ( dokzContext.getPanelContext( panel ).isVisibleIn( dokzContainer ) ) {
                 panels.add( panel );
             }
         }

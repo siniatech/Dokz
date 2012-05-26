@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JPanel;
 
 import com.siniatech.dokz.context.DokzContext;
+import com.siniatech.dokz.context.NeighbourContext;
 import com.siniatech.dokz.docking.DockingManager;
 import com.siniatech.dokz.layout.DokzLayoutManager;
 import com.siniatech.dokz.resize.ResizeManager;
@@ -33,14 +34,14 @@ public class DokzContainer extends JPanel {
             }
         } );
         this.dockingManager = new DockingManager( this );
-        setLayout( new DokzLayoutManager( dokzContext ) );
+        setLayout( new DokzLayoutManager( this, dokzContext ) );
         setBackground( Color.lightGray );
         addMouseMotionListener( new ResizeMotionListener() );
         addMouseListener( new ResizeListener() );
         addMouseMotionListener( dockingManager );
         addMouseListener( dockingManager );
     }
-
+    
     private void resetCursor() {
         if ( getCursor() != Cursor.getDefaultCursor() ) {
             setCursor( Cursor.getDefaultCursor() );
