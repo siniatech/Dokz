@@ -15,11 +15,15 @@ import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
 import com.siniatech.dokz.DokzPanelState;
 import com.siniatech.dokz.context.DokzContext;
+import com.siniatech.dokz.docking.DockingGlassPanel;
 import com.siniatech.siniautils.collection.CollectionHelper;
 import com.siniatech.siniautils.fn.IConditional;
 import com.siniatech.siniautils.fn.Tuple2;
 
 public class DokzLayoutManager implements LayoutManager {
+
+    private static final int MaxedZOrder = 0;
+    private static final int DockingZOrder = 0;
 
     static private final ILayouter scalingLayouter = new ScalingLayouter();
     static private final ILayouter tilingLayouter = new TilingLayouter();
@@ -39,6 +43,11 @@ public class DokzLayoutManager implements LayoutManager {
 
     @Override
     public void addLayoutComponent( String name, Component comp ) {
+        dokzContainer.setComponentZOrder( comp, standardZOrder() );
+    }
+
+    private int standardZOrder() {
+        return dokzContainer.getComponentCount() - 1;
     }
 
     @Override
@@ -62,14 +71,21 @@ public class DokzLayoutManager implements LayoutManager {
             layoutWithMaximizedChild();
         } else {
             restoreMaxedChildIfPresent();
+            layoutDockingPanel();
             layoutWithoutMaximizedChild();
         }
+    }
+
+    private void layoutDockingPanel() {
+        DockingGlassPanel glassPanel = dokzContainer.getDockingManager().getDockingGlassPanel();
+        glassPanel.setBounds( 0, 0, dokzContainer.getWidth(), dokzContainer.getHeight() );
+        dokzContainer.setComponentZOrder( glassPanel, DockingZOrder );
     }
 
     private void restoreMaxedChildIfPresent() {
         if ( lastMaxedPanel != null ) {
             lastMaxedPanel._1().setBounds( lastMaxedPanel._2().getBounds() );
-            dokzContainer.setComponentZOrder( lastMaxedPanel._1(), 5 );
+            dokzContainer.setComponentZOrder( lastMaxedPanel._1(), standardZOrder() );
             lastMaxedPanel = null;
         }
     }
@@ -91,7 +107,7 @@ public class DokzLayoutManager implements LayoutManager {
         DokzPanel maxedPanel = CollectionHelper.find( getPanels(), isMaximized() );
         lastMaxedPanel = new Tuple2<>( maxedPanel, maxedPanel.getBounds() );
         maxedPanel.setBounds( 0, 0, dokzContainer.getWidth(), dokzContainer.getHeight() );
-        dokzContainer.setComponentZOrder( maxedPanel, 0 );
+        dokzContainer.setComponentZOrder( maxedPanel, MaxedZOrder );
     }
 
     private void layoutWithoutMaximizedChild() {

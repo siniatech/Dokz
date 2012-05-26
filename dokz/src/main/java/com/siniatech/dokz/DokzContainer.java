@@ -41,8 +41,8 @@ public class DokzContainer extends JPanel {
         addMouseMotionListener( dockingManager );
         addMouseListener( dockingManager );
     }
-    
-    private void resetCursor() {
+
+    public void resetCursor() {
         if ( getCursor() != Cursor.getDefaultCursor() ) {
             setCursor( Cursor.getDefaultCursor() );
         }
@@ -73,6 +73,10 @@ public class DokzContainer extends JPanel {
             }
         }
         return null;
+    }
+
+    public DockingManager getDockingManager() {
+        return dockingManager;
     }
 
     private NeighbourContext getPanelsAround( Point point ) {

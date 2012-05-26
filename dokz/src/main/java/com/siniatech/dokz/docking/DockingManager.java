@@ -19,6 +19,7 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
     public DockingManager( DokzContainer dokzContainer ) {
         this.dokzContainer = dokzContainer;
         this.dockingGlassPanel = new DockingGlassPanel();
+        dokzContainer.add( dockingGlassPanel );
     }
 
     public boolean canStartDocking( MouseEvent e ) {
@@ -26,19 +27,26 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
         return panel != null && //
             panel.isPointInButtonBar( convertPoint( dokzContainer, e.getPoint(), panel ) );
     }
-    
+
+    public DockingGlassPanel getDockingGlassPanel() {
+        return dockingGlassPanel;
+    }
+
     public void startDocking() {
+        setCursor( Cursor.getPredefinedCursor( Cursor.MOVE_CURSOR ) );
         dockingStarted = true;
-        System.out.println( "START DOCKING" );
+        dockingGlassPanel.setVisible( true );
+        dokzContainer.revalidate();
     }
 
     private void endDocking() {
-        System.out.println( "END DOCKING" );
+        dokzContainer.resetCursor();
         dockingStarted = false;
+        dockingGlassPanel.setVisible( false );
+        dokzContainer.revalidate();
     }
 
     private void alterDocking() {
-        System.out.println( "ALTER DOCKING" );
     }
 
     private void setCursor( Cursor c ) {
@@ -52,7 +60,6 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
 
     @Override
     public void mousePressed( MouseEvent e ) {
-        System.out.println( "mouse pressed" );
         if ( canStartDocking( e ) ) {
             startDocking();
         }
