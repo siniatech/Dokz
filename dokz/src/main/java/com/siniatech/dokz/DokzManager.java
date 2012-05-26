@@ -3,6 +3,7 @@ package com.siniatech.dokz;
 import javax.swing.JComponent;
 
 import com.siniatech.dokz.api.IDokzContext;
+import com.siniatech.dokz.component.DokzButtonBar;
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.context.DokzPanelContext;
 import com.siniatech.siniautils.fn.IResponse0;

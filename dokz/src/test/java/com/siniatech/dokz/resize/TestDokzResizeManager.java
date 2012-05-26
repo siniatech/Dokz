@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.siniatech.dokz.DokzNeighbourContext;
+import com.siniatech.dokz.NeighbourContext;
 import com.siniatech.dokz.DokzPanel;
 import com.siniatech.dokz.test.fixtures.MockDokzPanel;
 import com.siniatech.siniautils.fn.ResponseHelper;
@@ -21,12 +21,12 @@ public class TestDokzResizeManager {
     static private final int inverseMinPanelWidth = 1000 - minPanelWidth;
     static private final int inverseMinPanelHeight = 1000 - minPanelHeight;
 
-    private DokzResizeManager dokzResizeManager = new DokzResizeManager( ResponseHelper.emptyResponse0 );
+    private ResizeManager dokzResizeManager = new ResizeManager( ResponseHelper.emptyResponse0 );
 
     @Test
     public void shouldKnowWhenResizing() {
         assertFalse( dokzResizeManager.isResizeStarted() );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), null );
         dokzResizeManager.startResize( new Point( 0, 0 ), neighbourContext, emptySet );
         assertTrue( dokzResizeManager.isResizeStarted() );
         dokzResizeManager.endResize();
@@ -35,37 +35,37 @@ public class TestDokzResizeManager {
 
     @Test
     public void cannotResizeIfOverPanel() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), new MockDokzPanel() );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), new MockDokzPanel() );
         assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
     @Test
     public void cannotResizeIfNoNeighbours() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, null, null, null );
         assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
     @Test
     public void cannotResizeIfOneEwNeighbour() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, new MockDokzPanel(), null, null );
         assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
     @Test
     public void cannotResizeIfOneNsNeighbour() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, new MockDokzPanel(), null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, new MockDokzPanel(), null, null, null );
         assertFalse( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
     @Test
     public void canResizeIfHaveEwNeighbours() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, new MockDokzPanel(), new MockDokzPanel(), null );
         assertTrue( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
     @Test
     public void canResizeIfHaveNsNeighbours() {
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( new MockDokzPanel(), new MockDokzPanel(), null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( new MockDokzPanel(), new MockDokzPanel(), null, null, null );
         assertTrue( dokzResizeManager.canStartResize( neighbourContext ) );
     }
 
@@ -73,7 +73,7 @@ public class TestDokzResizeManager {
     public void canResizeE() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 550, 250 ) );
         assertEquals( new Rectangle( 0, 0, 550, 500 ), p1.getBounds() );
@@ -90,7 +90,7 @@ public class TestDokzResizeManager {
     public void cannotResizeESmallerThanMin() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( inverseMinPanelWidth, 250 ) );
         assertEquals( new Rectangle( 0, 0, inverseMinPanelWidth, 500 ), p1.getBounds() );
@@ -110,7 +110,7 @@ public class TestDokzResizeManager {
     public void canResizeEWithGap() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 502, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 552, 250 ) );
         assertEquals( new Rectangle( 0, 0, 550, 500 ), p1.getBounds() );
@@ -127,7 +127,7 @@ public class TestDokzResizeManager {
     public void canResizeEYChangesMakesNoDiff() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 550, 50 ) );
         assertEquals( new Rectangle( 0, 0, 550, 500 ), p1.getBounds() );
@@ -144,7 +144,7 @@ public class TestDokzResizeManager {
     public void canResizeW() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 450, 250 ) );
         assertEquals( new Rectangle( 0, 0, 450, 500 ), p1.getBounds() );
@@ -161,7 +161,7 @@ public class TestDokzResizeManager {
     public void cannotResizeWSmallerThanMin() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( minPanelWidth, 250 ) );
         assertEquals( new Rectangle( 0, 0, minPanelWidth, 500 ), p1.getBounds() );
@@ -181,7 +181,7 @@ public class TestDokzResizeManager {
     public void canResizeWWithGap() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 502, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 452, 250 ) );
         assertEquals( new Rectangle( 0, 0, 450, 500 ), p1.getBounds() );
@@ -198,7 +198,7 @@ public class TestDokzResizeManager {
     public void canResizeWYChangesMakesNoDiff() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 450, 200 ) );
         assertEquals( new Rectangle( 0, 0, 450, 500 ), p1.getBounds() );
@@ -215,7 +215,7 @@ public class TestDokzResizeManager {
     public void canResizeEWInOneMove() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 250 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 450, 250 ) );
         assertEquals( new Rectangle( 0, 0, 450, 500 ), p1.getBounds() );
@@ -232,7 +232,7 @@ public class TestDokzResizeManager {
     public void canResizeN() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, 250 ) );
         assertEquals( new Rectangle( 0, 0, 500, 250 ), p1.getBounds() );
@@ -249,7 +249,7 @@ public class TestDokzResizeManager {
     public void cannotResizeNSmallerThanMin() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, minPanelHeight ) );
         assertEquals( new Rectangle( 0, 0, 500, minPanelHeight ), p1.getBounds() );
@@ -269,7 +269,7 @@ public class TestDokzResizeManager {
     public void canResizeNWithGap() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 504 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, 154 ) );
         assertEquals( new Rectangle( 0, 0, 500, 150 ), p1.getBounds() );
@@ -286,7 +286,7 @@ public class TestDokzResizeManager {
     public void canResizeNXChangesMakesNoDiff() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( -12, 350 ) );
         assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
@@ -303,7 +303,7 @@ public class TestDokzResizeManager {
     public void canResizeS() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, 550 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -320,7 +320,7 @@ public class TestDokzResizeManager {
     public void cannotResizeSSmallerThanMin() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, inverseMinPanelHeight ) );
         assertEquals( new Rectangle( 0, 0, 500, inverseMinPanelHeight ), p1.getBounds() );
@@ -340,7 +340,7 @@ public class TestDokzResizeManager {
     public void canResizeSWithGap() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 504 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, 554 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -357,7 +357,7 @@ public class TestDokzResizeManager {
     public void canResizeSXChangesMakesNoDiff() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( -12, 550 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -374,7 +374,7 @@ public class TestDokzResizeManager {
     public void canResizeNSInOneMove() {
         DokzPanel p1 = new MockDokzPanel( new Rectangle( 0, 0, 500, 500 ) );
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p2, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p2, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2 ) );
         dokzResizeManager.doResize( new Point( 250, 550 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -393,7 +393,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p3, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 250, 550 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -413,7 +413,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p3, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 500 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 250, 350 ) );
         assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
@@ -433,7 +433,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 400, 750 ) );
         assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
@@ -453,7 +453,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 500, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 500, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 500, 500, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 800, 750 ) );
         assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );
@@ -473,7 +473,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p3, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 502 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 250, 552 ) );
         assertEquals( new Rectangle( 0, 0, 500, 550 ), p1.getBounds() );
@@ -493,7 +493,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( p1, p3, null, null, null );
+        NeighbourContext neighbourContext = new NeighbourContext( p1, p3, null, null, null );
         dokzResizeManager.startResize( new Point( 250, 501 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 250, 351 ) );
         assertEquals( new Rectangle( 0, 0, 500, 350 ), p1.getBounds() );
@@ -513,7 +513,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 750 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 400, 750 ) );
         assertEquals( new Rectangle( 0, 0, 400, 500 ), p1.getBounds() );
@@ -533,7 +533,7 @@ public class TestDokzResizeManager {
         DokzPanel p2 = new MockDokzPanel( new Rectangle( 505, 0, 500, 500 ) );
         DokzPanel p3 = new MockDokzPanel( new Rectangle( 0, 505, 500, 500 ) );
         DokzPanel p4 = new MockDokzPanel( new Rectangle( 505, 505, 500, 500 ) );
-        DokzNeighbourContext neighbourContext = new DokzNeighbourContext( null, null, p2, p1, null );
+        NeighbourContext neighbourContext = new NeighbourContext( null, null, p2, p1, null );
         dokzResizeManager.startResize( new Point( 500, 753 ), neighbourContext, asSet( p1, p2, p3, p4 ) );
         dokzResizeManager.doResize( new Point( 800, 753 ) );
         assertEquals( new Rectangle( 0, 0, 800, 500 ), p1.getBounds() );

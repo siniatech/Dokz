@@ -1,5 +1,7 @@
 package com.siniatech.dokz;
 
+import java.awt.Point;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -37,4 +39,9 @@ public class DokzPanel extends JPanel {
     public String toString() {
         return String.format( "{ DokzPanel : %s }", title );
     }
+
+    public boolean isPointInButtonBar( Point p ) {
+        return buttonBar.getBounds().contains( p );
+    }
+
 }
