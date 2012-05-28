@@ -8,6 +8,7 @@ public class DokzConstants {
     public static final int defaultPanelGap = 5;
     public static final int minPanelWidth = 70;
     public static final int minPanelHeight = 50;
+    public static final int borderDockBoundary = 10;
     
 
 }
