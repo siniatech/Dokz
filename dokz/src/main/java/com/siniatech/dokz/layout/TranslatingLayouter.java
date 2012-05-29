@@ -22,10 +22,10 @@ public class TranslatingLayouter extends AbstractLayouter {
         TranslatingLayoutContext translatingLayoutContext = (TranslatingLayoutContext) layoutContext;
         for ( T component : components ) {
             Rectangle oldBounds = component.getBounds();
-            assert oldBounds.getMinX() + translatingLayoutContext.getXTranslation() > 0;
-            assert oldBounds.getMaxX() + translatingLayoutContext.getXTranslation() < size.width;
-            assert oldBounds.getMinY() + translatingLayoutContext.getYTranslation() > 0;
-            assert oldBounds.getMaxY() + translatingLayoutContext.getYTranslation() < size.height;
+            assert oldBounds.getMinX() + translatingLayoutContext.getXTranslation() >= 0;
+            assert oldBounds.getMaxX() + translatingLayoutContext.getXTranslation() <= size.width;
+            assert oldBounds.getMinY() + translatingLayoutContext.getYTranslation() >= 0;
+            assert oldBounds.getMaxY() + translatingLayoutContext.getYTranslation() <= size.height;
             component.setBounds( //
                 oldBounds.x + translatingLayoutContext.getXTranslation(), //
                 oldBounds.y + translatingLayoutContext.getYTranslation(), //
