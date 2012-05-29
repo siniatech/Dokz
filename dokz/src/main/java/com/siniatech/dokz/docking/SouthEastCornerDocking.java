@@ -9,6 +9,19 @@
  ******************************************************************************/
 package com.siniatech.dokz.docking;
 
-public class SouthEastCornerDocking extends CornerDocking {
+import static com.siniatech.siniautils.swing.BoundsHelper.*;
 
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.util.Arrays;
+
+import com.siniatech.dokz.DokzContainer;
+import com.siniatech.dokz.DokzPanel;
+
+public class SouthEastCornerDocking extends CornerDocking {
+    @Override
+    protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
+        Component bottomRightmostComponent = getBottomRightmostComponent( Arrays.asList( dokzContainer.getComponents() ) );
+        return bottomRightmostComponent.getBounds();
+    }
 }

@@ -26,6 +26,7 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
     private final DokzContainer dokzContainer;
     private boolean dockingStarted;
     private final DockingGlassPanel dockingGlassPanel;
+    private DokzPanel dockingPanel;
 
     public DockingManager( DokzContainer dokzContainer ) {
         this.dokzContainer = dokzContainer;
@@ -43,22 +44,27 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
         return dockingGlassPanel;
     }
 
-    public void startDocking() {
+    public void startDocking( Point p ) {
         setCursor( Cursor.getPredefinedCursor( Cursor.MOVE_CURSOR ) );
+        dockingPanel = dokzContainer.getPanelAt( p );
         dockingStarted = true;
         dockingGlassPanel.setVisible( true );
         dokzContainer.revalidate();
     }
 
     private void endDocking() {
+        dockingGlassPanel.setPotentialDockingZone( null );
         dokzContainer.resetCursor();
         dockingStarted = false;
         dockingGlassPanel.setVisible( false );
         dokzContainer.revalidate();
+        dockingPanel = null;
     }
 
     private void alterDocking( Point p ) {
-        determinePotentialDocking( p ).showPotentialPositioning( dokzContainer, dockingGlassPanel );
+        IDocking docking = determinePotentialDocking( p );
+        docking.showPotentialPositioning( dokzContainer, dockingGlassPanel, dockingPanel );
+        dockingGlassPanel.repaint();
     }
 
     private IDocking determinePotentialDocking( Point p ) {
@@ -100,7 +106,7 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
     }
 
     private boolean canDockEast( Point p ) {
-        return p.y > ( dokzContainer.getWidth() - getBorderBoundary() );
+        return p.x > ( dokzContainer.getWidth() - getBorderBoundary() );
     }
 
     private void setCursor( Cursor c ) {
@@ -108,14 +114,9 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
     }
 
     @Override
-    public void mouseExited( MouseEvent e ) {
-        setCursor( Cursor.getDefaultCursor() );
-    }
-
-    @Override
     public void mousePressed( MouseEvent e ) {
         if ( canStartDocking( e ) ) {
-            startDocking();
+            startDocking( e.getPoint() );
         }
     }
 

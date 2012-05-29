@@ -9,6 +9,17 @@
  ******************************************************************************/
 package com.siniatech.dokz.docking;
 
+import java.awt.Rectangle;
+
+import com.siniatech.dokz.DokzContainer;
+import com.siniatech.dokz.DokzPanel;
+
 public class SouthSideDocking extends SideDocking {
+
+    @Override
+    protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
+        Rectangle bounds = dokzContainer.getBounds();
+        return new Rectangle( 0, bounds.height - dockingPanel.getHeight(), bounds.width, dockingPanel.getHeight() );
+    }
 
 }

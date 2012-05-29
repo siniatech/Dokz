@@ -10,12 +10,13 @@
 package com.siniatech.dokz.docking;
 
 import com.siniatech.dokz.DokzContainer;
+import com.siniatech.dokz.DokzPanel;
 
 public class NoPossibleDocking implements IDocking {
 
     @Override
-    public void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel ) {
-        // do nothing
+    public void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel, DokzPanel dockingPanel ) {
+        glassPanel.setPotentialDockingZone( null );
     }
 
     @Override

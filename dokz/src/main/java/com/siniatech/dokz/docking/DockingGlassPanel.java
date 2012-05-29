@@ -24,6 +24,7 @@ public class DockingGlassPanel extends JPanel {
     public DockingGlassPanel() {
         this.potentialDockingZone = null;
         setVisible( false );
+        setOpaque( false );
     }
 
     public void setPotentialDockingZone( Rectangle potentialDockingZone ) {

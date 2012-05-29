@@ -9,15 +9,19 @@
  ******************************************************************************/
 package com.siniatech.dokz.docking;
 
+import java.awt.Rectangle;
+
 import com.siniatech.dokz.DokzContainer;
+import com.siniatech.dokz.DokzPanel;
 
 abstract public class CornerDocking implements IDocking {
 
     @Override
-    public void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel ) {
-        // TODO Auto-generated method stub
-
+    public void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel, DokzPanel dockingPanel ) {
+        glassPanel.setPotentialDockingZone( getDockingZone( dokzContainer, dockingPanel ) );
     }
+
+    abstract protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel );
 
     @Override
     public void applyDocking( DokzContainer dokzContainer ) {
