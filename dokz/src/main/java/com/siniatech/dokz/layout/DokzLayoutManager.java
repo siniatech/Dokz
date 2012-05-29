@@ -155,4 +155,12 @@ public class DokzLayoutManager implements LayoutManager {
         return panels;
     }
 
+    /**
+     * If the layout of the container is manipulated externally, call this
+     * method to let the layout manager know about the current layout.
+     */
+    public void applyCurrentLayout() {
+        lastLaidOutComponents = getPanels();
+    }
+
 }

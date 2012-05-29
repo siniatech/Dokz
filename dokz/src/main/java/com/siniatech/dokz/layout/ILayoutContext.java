@@ -7,15 +7,8 @@
  * of the project, and at http://www.opensource.org/licenses/mit-license.php
  *
  ******************************************************************************/
-package com.siniatech.dokz.docking;
+package com.siniatech.dokz.layout;
 
-import com.siniatech.dokz.DokzContainer;
-import com.siniatech.dokz.DokzPanel;
-
-public interface IDocking {
-
-    void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel, DokzPanel dockingPanel );
-
-    void applyDocking( DokzContainer dokzContainer, DokzPanel dockingPanel );
+public interface ILayoutContext {
 
 }

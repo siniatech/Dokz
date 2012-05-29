@@ -52,7 +52,9 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
         dokzContainer.revalidate();
     }
 
-    private void endDocking() {
+    private void endDocking( Point p ) {
+        IDocking docking = determinePotentialDocking( p );
+        docking.applyDocking( dokzContainer, dockingPanel );
         dockingGlassPanel.setPotentialDockingZone( null );
         dokzContainer.resetCursor();
         dockingStarted = false;
@@ -123,7 +125,7 @@ public class DockingManager extends MouseAdapter implements MouseMotionListener 
     @Override
     public void mouseReleased( MouseEvent e ) {
         if ( dockingStarted ) {
-            endDocking();
+            endDocking( e.getPoint() );
         }
     }
 

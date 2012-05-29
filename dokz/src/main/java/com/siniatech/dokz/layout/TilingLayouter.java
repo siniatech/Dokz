@@ -9,6 +9,7 @@
  ******************************************************************************/
 package com.siniatech.dokz.layout;
 
+import static com.siniatech.dokz.layout.NoLayoutContext.*;
 import static java.lang.Math.*;
 
 import java.awt.Component;
@@ -22,7 +23,8 @@ import java.util.Map;
 public class TilingLayouter extends AbstractLayouter {
 
     @Override
-    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext ) {
+        assert layoutContext == NoLayoutContext;
         int xSide = (int) ceil( sqrt( components.size() ) );
         if ( xSide != 0 ) {
             Map<Point, Rectangle> coordToBounds = determineBoundsOfGrid( components, size, hGap, vGap, xSide );

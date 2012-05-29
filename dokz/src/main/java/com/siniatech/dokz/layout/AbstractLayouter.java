@@ -9,6 +9,8 @@
  ******************************************************************************/
 package com.siniatech.dokz.layout;
 
+import static com.siniatech.dokz.layout.NoLayoutContext.*;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Collection;
@@ -17,7 +19,12 @@ abstract public class AbstractLayouter implements ILayouter {
 
     @Override
     public <T extends Component> void doLayout( Collection<T> components, Dimension size ) {
-        doLayout( components, size, 0, 0 );
+        doLayout( components, size, 0, 0, NoLayoutContext );
+    }
+
+    @Override
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
+        doLayout( components, size, hGap, vGap, NoLayoutContext );
     }
 
 }

@@ -9,6 +9,7 @@
  ******************************************************************************/
 package com.siniatech.dokz.layout;
 
+import static com.siniatech.dokz.layout.NoLayoutContext.*;
 import static com.siniatech.siniautils.swing.BoundsHelper.*;
 import static java.lang.Math.*;
 
@@ -34,7 +35,8 @@ import com.siniatech.siniautils.fn.IFunction1;
 public class ScalingLayouter extends AbstractLayouter {
 
     @Override
-    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext ) {
+        assert layoutContext == NoLayoutContext;
         if ( components.size() > 0 ) {
             doRoughScaledLayout( components, size );
             correctGapsAndBorders( components, size, hGap, vGap );

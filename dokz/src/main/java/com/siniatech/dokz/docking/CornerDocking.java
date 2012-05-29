@@ -24,7 +24,7 @@ abstract public class CornerDocking implements IDocking {
     abstract protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel );
 
     @Override
-    public void applyDocking( DokzContainer dokzContainer ) {
+    public void applyDocking( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
         // TODO Auto-generated method stub
 
     }

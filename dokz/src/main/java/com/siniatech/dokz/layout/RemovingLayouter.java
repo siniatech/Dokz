@@ -10,6 +10,7 @@
 package com.siniatech.dokz.layout;
 
 import static com.siniatech.siniautils.swing.BoundsHelper.*;
+import static com.siniatech.dokz.layout.NoLayoutContext.*;
 import static java.lang.String.*;
 
 import java.awt.Component;
@@ -27,7 +28,8 @@ import com.siniatech.siniautils.annotations.DefaultForTesting;
 public class RemovingLayouter extends AbstractLayouter {
 
     @Override
-    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap ) {
+    public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext ) {
+        assert layoutContext == NoLayoutContext;
         Rectangle gap = findGap( components, size, hGap, vGap );
         if ( gap.width == size.width ) {
             extendComponentsToFillFullWidthGap( components, gap, size, vGap );

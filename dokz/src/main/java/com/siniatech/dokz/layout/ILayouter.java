@@ -18,4 +18,6 @@ public interface ILayouter {
     <T extends Component> void doLayout( Collection<T> components, Dimension size );
 
     <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap );
+    
+    <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext );
 }
