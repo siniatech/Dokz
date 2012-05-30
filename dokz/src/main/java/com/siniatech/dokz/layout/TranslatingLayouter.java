@@ -18,20 +18,34 @@ public class TranslatingLayouter extends AbstractLayouter {
 
     @Override
     public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext ) {
-        assert layoutContext instanceof TranslatingLayoutContext;
-        TranslatingLayoutContext translatingLayoutContext = (TranslatingLayoutContext) layoutContext;
+        TranslatingLayoutContext translatingLayoutContext = getTranslatingLayoutContext( layoutContext );
         for ( T component : components ) {
             Rectangle oldBounds = component.getBounds();
-            assert oldBounds.getMinX() + translatingLayoutContext.getXTranslation() >= 0;
-            assert oldBounds.getMaxX() + translatingLayoutContext.getXTranslation() <= size.width;
-            assert oldBounds.getMinY() + translatingLayoutContext.getYTranslation() >= 0;
-            assert oldBounds.getMaxY() + translatingLayoutContext.getYTranslation() <= size.height;
+            checkTranslatedBounds( size, translatingLayoutContext, oldBounds );
             component.setBounds( //
                 oldBounds.x + translatingLayoutContext.getXTranslation(), //
                 oldBounds.y + translatingLayoutContext.getYTranslation(), //
                 oldBounds.width, //
                 oldBounds.height //
                 );
+        }
+    }
+
+    private TranslatingLayoutContext getTranslatingLayoutContext( ILayoutContext layoutContext ) {
+        if ( ! ( layoutContext instanceof TranslatingLayoutContext ) ) {
+            throw new IllegalStateException( "Translating layouter requires suitable context" );
+        }
+        TranslatingLayoutContext translatingLayoutContext = (TranslatingLayoutContext) layoutContext;
+        return translatingLayoutContext;
+    }
+
+    static private void checkTranslatedBounds( Dimension size, TranslatingLayoutContext translatingLayoutContext, Rectangle oldBounds ) {
+        if ( oldBounds.getMinX() + translatingLayoutContext.getXTranslation() < 0 || //
+            oldBounds.getMaxX() + translatingLayoutContext.getXTranslation() > size.width || //
+            oldBounds.getMinY() + translatingLayoutContext.getYTranslation() < 0 || //
+            oldBounds.getMaxY() + translatingLayoutContext.getYTranslation() > size.height //
+        ) {
+            throw new IllegalStateException( "Component translated beyond allowable bounds" );
         }
     }
 

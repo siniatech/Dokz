@@ -34,6 +34,72 @@ public class TestTranslatingLayouter {
     }
 
     @Test
+    public void shouldFailWithoutLayoutContext() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0 );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
+    public void shouldFailWithNullLayoutContext() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, null );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
+    public void shouldFailIfBreaksBorderWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( -50, 0 ) );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
+    public void shouldFailIfBreaksBorderEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 160, 0, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 50, 0 ) );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
+    public void shouldFailIfBreaksBorderNorth() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 0, -50 ) );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
+    public void shouldFailIfBreaksBorderSouth() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 160, 50, 50 );
+        try {
+            layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 0, 50 ) );
+            fail();
+        } catch ( Exception e ) {
+        }
+    }
+
+    @Test
     public void shouldTranslateSingleCompEast() {
         Component c1 = new JPanel();
         c1.setBounds( 0, 0, 50, 50 );
@@ -63,6 +129,126 @@ public class TestTranslatingLayouter {
         c1.setBounds( 0, 0, 50, 50 );
         layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 0, 50 ) );
         assertEquals( new Rectangle( 0, 50, 50, 50 ), c1.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateSingleCompNorthEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 50, -50 ) );
+        assertEquals( new Rectangle( 50, 0, 50, 50 ), c1.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateSingleCompNorthWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 50, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( -50, -50 ) );
+        assertEquals( new Rectangle( 0, 0, 50, 50 ), c1.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateSingleCompSouthEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( 50, 50 ) );
+        assertEquals( new Rectangle( 50, 50, 50, 50 ), c1.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateSingleCompSouthWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 50, 0, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1 ), new Dimension( 200, 200 ), 0, 0, context( -50, 50 ) );
+        assertEquals( new Rectangle( 0, 50, 50, 50 ), c1.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 0, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( 50, 0 ) );
+        assertEquals( new Rectangle( 50, 0, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 50, 50, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 50, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( -50, 0 ) );
+        assertEquals( new Rectangle( 0, 0, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 0, 50, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompNorth() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 50, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( 0, -50 ) );
+        assertEquals( new Rectangle( 0, 0, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 50, 0, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompSouth() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 0, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( 0, 50 ) );
+        assertEquals( new Rectangle( 0, 50, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 50, 50, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompNorthEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 50, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( 50, -50 ) );
+        assertEquals( new Rectangle( 50, 0, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 100, 0, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompNorthWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 50, 50, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 100, 50, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( -50, -50 ) );
+        assertEquals( new Rectangle( 0, 0, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 50, 0, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompSouthEast() {
+        Component c1 = new JPanel();
+        c1.setBounds( 0, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 50, 0, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( 50, 50 ) );
+        assertEquals( new Rectangle( 50, 50, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 100, 50, 50, 50 ), c2.getBounds() );
+    }
+
+    @Test
+    public void shouldTranslateMultipleCompSouthWest() {
+        Component c1 = new JPanel();
+        c1.setBounds( 50, 0, 50, 50 );
+        Component c2 = new JPanel();
+        c2.setBounds( 100, 0, 50, 50 );
+        layouter.doLayout( Arrays.<Component> asList( c1, c2 ), new Dimension( 200, 200 ), 0, 0, context( -50, 50 ) );
+        assertEquals( new Rectangle( 0, 50, 50, 50 ), c1.getBounds() );
+        assertEquals( new Rectangle( 50, 50, 50, 50 ), c2.getBounds() );
     }
 
 }
