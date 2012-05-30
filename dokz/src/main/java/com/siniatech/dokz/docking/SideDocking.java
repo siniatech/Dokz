@@ -9,6 +9,7 @@
  ******************************************************************************/
 package com.siniatech.dokz.docking;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ import com.siniatech.dokz.layout.DokzLayoutManager;
 import com.siniatech.dokz.layout.ILayouter;
 import com.siniatech.dokz.layout.RemovingLayouter;
 import com.siniatech.dokz.layout.ScalingLayouter;
+import com.siniatech.dokz.layout.TranslatingLayoutContext;
 import com.siniatech.dokz.layout.TranslatingLayouter;
 
 abstract public class SideDocking implements IDocking {
@@ -37,7 +39,24 @@ abstract public class SideDocking implements IDocking {
 
     @Override
     public void applyDocking( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
+        Rectangle oldDockingPanelBounds = dockingPanel.getBounds();
+        Rectangle containerBounds = dokzContainer.getBounds();
+        dokzContainer.remove( dockingPanel );
+        DokzContext dokzContext = dokzContainer.getDokzContext();
+        Set<DokzPanel> panels = getPanels( dokzContainer );
+        removingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
+        scalingLayouter.doLayout( panels, getScalingBounds( oldDockingPanelBounds, containerBounds ) );
+        translatingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap(), createTranslatingLayoutContext( oldDockingPanelBounds ) );
+        dokzContainer.add( dockingPanel );
+        dockingPanel.setBounds( createDockedBounds( oldDockingPanelBounds, containerBounds ) );
+        applyNewLayout( dokzContainer );
     }
+
+    abstract protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds );
+
+    abstract protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds );
+
+    abstract protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds );
 
     static protected void applyNewLayout( DokzContainer dokzContainer ) {
         DokzLayoutManager layoutManager = (DokzLayoutManager) dokzContainer.getLayout();

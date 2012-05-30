@@ -9,10 +9,12 @@
  ******************************************************************************/
 package com.siniatech.dokz.docking;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
+import com.siniatech.dokz.layout.TranslatingLayoutContext;
 
 public class SouthSideDocking extends SideDocking {
 
@@ -20,6 +22,21 @@ public class SouthSideDocking extends SideDocking {
     protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
         Rectangle bounds = dokzContainer.getBounds();
         return new Rectangle( 0, bounds.height - dockingPanel.getHeight(), bounds.width, dockingPanel.getHeight() );
+    }
+
+    @Override
+    protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
+        return new Rectangle( 0, containerBounds.height - oldDockingPanelBounds.height, containerBounds.width, oldDockingPanelBounds.height );
+    }
+
+    @Override
+    protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds ) {
+        return new TranslatingLayoutContext( 0, 0 );
+    }
+
+    @Override
+    protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
+        return new Dimension( containerBounds.width, containerBounds.height - oldDockingPanelBounds.height );
     }
 
 }

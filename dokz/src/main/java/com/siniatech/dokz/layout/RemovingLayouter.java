@@ -9,8 +9,8 @@
  ******************************************************************************/
 package com.siniatech.dokz.layout;
 
-import static com.siniatech.siniautils.swing.BoundsHelper.*;
 import static com.siniatech.dokz.layout.NoLayoutContext.*;
+import static com.siniatech.siniautils.swing.BoundsHelper.*;
 import static java.lang.String.*;
 
 import java.awt.Component;
@@ -31,7 +31,9 @@ public class RemovingLayouter extends AbstractLayouter {
     public <T extends Component> void doLayout( Collection<T> components, Dimension size, int hGap, int vGap, ILayoutContext layoutContext ) {
         assert layoutContext == NoLayoutContext;
         Rectangle gap = findGap( components, size, hGap, vGap );
-        if ( gap.width == size.width ) {
+        if ( gap.width == 0 || gap.height == 0 ) {
+            throw new IllegalStateException( "No gap in layout" );
+        } else if ( gap.width == size.width ) {
             extendComponentsToFillFullWidthGap( components, gap, size, vGap );
         } else if ( gap.height == size.height ) {
             extendComponentsToFillFullHeightGap( components, gap, size, hGap );
