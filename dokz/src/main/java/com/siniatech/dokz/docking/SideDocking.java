@@ -45,8 +45,12 @@ abstract public class SideDocking implements IDocking {
         DokzContext dokzContext = dokzContainer.getDokzContext();
         Set<DokzPanel> panels = getPanels( dokzContainer );
         removingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
-        scalingLayouter.doLayout( panels, getScalingBounds( oldDockingPanelBounds, containerBounds ) );
+        scalingLayouter.doLayout( panels, getScalingBounds( oldDockingPanelBounds, containerBounds ), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
         translatingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap(), createTranslatingLayoutContext( oldDockingPanelBounds ) );
+        System.out.println( "translating" );
+        for ( DokzPanel dokzPanel : panels ) {
+            System.out.println( dokzPanel.getBounds() );
+        }
         dokzContainer.add( dockingPanel );
         dockingPanel.setBounds( createDockedBounds( oldDockingPanelBounds, containerBounds ) );
         applyNewLayout( dokzContainer );

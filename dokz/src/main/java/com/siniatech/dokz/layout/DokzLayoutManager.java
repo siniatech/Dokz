@@ -139,7 +139,7 @@ public class DokzLayoutManager implements LayoutManager {
     }
 
     private void layoutSameComponents() {
-        if ( getExtentOfComponents( lastLaidOutComponents ) != dokzContainer.getSize() ) {
+        if ( !getExtentOfComponents( lastLaidOutComponents ).equals( dokzContainer.getSize() ) ) {
             scalingLayouter.doLayout( lastLaidOutComponents, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
         }
         // else do nothing
