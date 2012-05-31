@@ -25,17 +25,17 @@ public class NorthSideDocking extends SideDocking {
     }
 
     @Override
-    protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
+    protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap ) {
         return new Rectangle( 0, 0, containerBounds.width, oldDockingPanelBounds.height );
     }
 
     @Override
-    protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds ) {
-        return new TranslatingLayoutContext( 0, oldDockingPanelBounds.height );
+    protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds, int hGap, int vGap ) {
+        return new TranslatingLayoutContext( 0, oldDockingPanelBounds.height + hGap );
     }
 
     @Override
-    protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
-        return new Dimension( containerBounds.width, containerBounds.height - oldDockingPanelBounds.height );
+    protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap ) {
+        return new Dimension( containerBounds.width, containerBounds.height - oldDockingPanelBounds.height - vGap );
     }
 }

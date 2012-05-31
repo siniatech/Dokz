@@ -44,23 +44,20 @@ abstract public class SideDocking implements IDocking {
         dokzContainer.remove( dockingPanel );
         DokzContext dokzContext = dokzContainer.getDokzContext();
         Set<DokzPanel> panels = getPanels( dokzContainer );
-        removingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
-        scalingLayouter.doLayout( panels, getScalingBounds( oldDockingPanelBounds, containerBounds ), dokzContext.getPanelGap(), dokzContext.getPanelGap() );
-        translatingLayouter.doLayout( panels, dokzContainer.getSize(), dokzContext.getPanelGap(), dokzContext.getPanelGap(), createTranslatingLayoutContext( oldDockingPanelBounds ) );
-        System.out.println( "translating" );
-        for ( DokzPanel dokzPanel : panels ) {
-            System.out.println( dokzPanel.getBounds() );
-        }
+        int panelGap = dokzContext.getPanelGap();
+        removingLayouter.doLayout( panels, dokzContainer.getSize(), panelGap, panelGap );
+        scalingLayouter.doLayout( panels, getScalingBounds( oldDockingPanelBounds, containerBounds, panelGap, panelGap ), panelGap, panelGap );
+        translatingLayouter.doLayout( panels, dokzContainer.getSize(), panelGap, panelGap, createTranslatingLayoutContext( oldDockingPanelBounds, panelGap, panelGap ) );
         dokzContainer.add( dockingPanel );
-        dockingPanel.setBounds( createDockedBounds( oldDockingPanelBounds, containerBounds ) );
+        dockingPanel.setBounds( createDockedBounds( oldDockingPanelBounds, containerBounds, panelGap, panelGap ) );
         applyNewLayout( dokzContainer );
     }
 
-    abstract protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds );
+    abstract protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap );
 
-    abstract protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds );
+    abstract protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds, int hGap, int vGap );
 
-    abstract protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds );
+    abstract protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap );
 
     static protected void applyNewLayout( DokzContainer dokzContainer ) {
         DokzLayoutManager layoutManager = (DokzLayoutManager) dokzContainer.getLayout();

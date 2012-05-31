@@ -26,18 +26,18 @@ public class EastSideDocking extends SideDocking {
     }
 
     @Override
-    protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
+    protected Rectangle createDockedBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap ) {
         return new Rectangle( containerBounds.width - oldDockingPanelBounds.width, 0, oldDockingPanelBounds.width, containerBounds.height );
     }
 
     @Override
-    protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds ) {
+    protected TranslatingLayoutContext createTranslatingLayoutContext( Rectangle oldDockingPanelBounds, int hGap, int vGap ) {
         return new TranslatingLayoutContext( 0, 0 );
     }
 
     @Override
-    protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds ) {
-        return new Dimension( containerBounds.width - oldDockingPanelBounds.width, containerBounds.height );
+    protected Dimension getScalingBounds( Rectangle oldDockingPanelBounds, Rectangle containerBounds, int hGap, int vGap ) {
+        return new Dimension( containerBounds.width - oldDockingPanelBounds.width - hGap, containerBounds.height );
     }
 
 }

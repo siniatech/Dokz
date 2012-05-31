@@ -32,13 +32,13 @@ abstract public class TestDocking {
     @Before
     public void init() {
         p1 = new MockDokzPanel( new Rectangle( 0, 0, 50, 50 ) );
-        p2 = new MockDokzPanel( new Rectangle( 50, 0, 50, 50 ) );
-        p3 = new MockDokzPanel( new Rectangle( 0, 50, 50, 50 ) );
-        p4 = new MockDokzPanel( new Rectangle( 50, 50, 50, 50 ) );
+        p2 = new MockDokzPanel( new Rectangle( 50 + getPanelGap(), 0, 50, 50 ) );
+        p3 = new MockDokzPanel( new Rectangle( 0, 50 + getPanelGap(), 50, 50 ) );
+        p4 = new MockDokzPanel( new Rectangle( 50 + getPanelGap(), 50 + getPanelGap(), 50, 50 ) );
         DokzContext dokzContext = new DokzContext() {
             @Override
             public int getPanelGap() {
-                return 0;
+                return TestDocking.this.getPanelGap();
             }
         };
         dokzContainer = new DokzContainer( dokzContext );
@@ -46,9 +46,13 @@ abstract public class TestDocking {
         dokzContext.add( p2, dokzContainer, dokzPanelContext() );
         dokzContext.add( p3, dokzContainer, dokzPanelContext() );
         dokzContext.add( p4, dokzContainer, dokzPanelContext() );
-        dokzContainer.setSize( 100, 100 );
+        dokzContainer.setSize( 100 + getPanelGap(), 100 + getPanelGap() );
         dokzContext.setMainContainer( dokzContainer );
         docking = createDocking();
+    }
+
+    protected int getPanelGap() {
+        return 0;
     }
 
     private DokzPanelContext dokzPanelContext() {
