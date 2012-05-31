@@ -13,6 +13,7 @@ import static junit.framework.Assert.*;
 
 import java.awt.Rectangle;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestEastSideDockingWithGap extends TestDocking {
@@ -30,6 +31,32 @@ public class TestEastSideDockingWithGap extends TestDocking {
     @Test
     public void applyDocking_p1() {
         docking.applyDocking( dokzContainer, p1 );
+        checkDock_p1();
+    }
+
+    @Test
+    public void applyDockingAndRelayout_p1() {
+        docking.applyDocking( dokzContainer, p1 );
+        checkDock_p1();
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        checkDock_p1();
+    }
+
+    @Test
+    @Ignore
+    // TODO  - Fix
+    public void applyDockingAndResize_p1() {
+        docking.applyDocking( dokzContainer, p1 );
+        checkDock_p1();
+        dokzContainer.setSize( 210, 210 );
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        assertEquals( new Rectangle( 110, 0, 100, 210 ), p1.getBounds() );
+        assertEquals( new Rectangle( 0, 0, 105, 105 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 110, 47, 100 ), p3.getBounds() );
+        assertEquals( new Rectangle( 52, 110, 48, 100 ), p4.getBounds() );
+    }
+
+    private void checkDock_p1() {
         assertEquals( new Rectangle( 55, 0, 50, 105 ), p1.getBounds() );
         assertEquals( new Rectangle( 0, 0, 50, 50 ), p2.getBounds() );
         assertEquals( new Rectangle( 0, 55, 22, 50 ), p3.getBounds() );
@@ -39,6 +66,32 @@ public class TestEastSideDockingWithGap extends TestDocking {
     @Test
     public void applyDocking_p2() {
         docking.applyDocking( dokzContainer, p2 );
+        checkDock_p2();
+    }
+
+    @Test
+    public void applyDockingAndRelayout_p2() {
+        docking.applyDocking( dokzContainer, p2 );
+        checkDock_p2();
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        checkDock_p2();
+    }
+
+    @Test
+    @Ignore
+    // TODO  - Fix
+    public void applyDockingAndResize_p2() {
+        docking.applyDocking( dokzContainer, p2 );
+        checkDock_p2();
+        dokzContainer.setSize( 210, 210 );
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        assertEquals( new Rectangle( 0, 0, 105, 105 ), p1.getBounds() );
+        assertEquals( new Rectangle( 110, 0, 100, 210 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 110, 47, 100 ), p3.getBounds() );
+        assertEquals( new Rectangle( 52, 110, 48, 100 ), p4.getBounds() );
+    }
+
+    private void checkDock_p2() {
         assertEquals( new Rectangle( 0, 0, 50, 50 ), p1.getBounds() );
         assertEquals( new Rectangle( 55, 0, 50, 105 ), p2.getBounds() );
         assertEquals( new Rectangle( 0, 55, 22, 50 ), p3.getBounds() );
@@ -48,6 +101,32 @@ public class TestEastSideDockingWithGap extends TestDocking {
     @Test
     public void applyDocking_p3() {
         docking.applyDocking( dokzContainer, p3 );
+        checkDock_p3();
+    }
+
+    @Test
+    public void applyDockingAndRelayout_p3() {
+        docking.applyDocking( dokzContainer, p3 );
+        checkDock_p3();
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        checkDock_p3();
+    }
+
+    @Test
+    @Ignore
+    // TODO  - Fix
+    public void applyDockingAndResize_p3() {
+        docking.applyDocking( dokzContainer, p3 );
+        checkDock_p3();
+        dokzContainer.setSize( 210, 210 );
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        assertEquals( new Rectangle( 0, 0, 49, 105 ), p1.getBounds() );
+        assertEquals( new Rectangle( 54, 0, 51, 105 ), p2.getBounds() );
+        assertEquals( new Rectangle( 110, 0, 100, 210 ), p3.getBounds() );
+        assertEquals( new Rectangle( 0, 110, 100, 100 ), p4.getBounds() );
+    }
+
+    private void checkDock_p3() {
         assertEquals( new Rectangle( 0, 0, 22, 50 ), p1.getBounds() );
         assertEquals( new Rectangle( 27, 0, 23, 50 ), p2.getBounds() );
         assertEquals( new Rectangle( 55, 0, 50, 105 ), p3.getBounds() );
@@ -57,6 +136,32 @@ public class TestEastSideDockingWithGap extends TestDocking {
     @Test
     public void applyDocking_p4() {
         docking.applyDocking( dokzContainer, p4 );
+        checkDock_p4();
+    }
+
+    @Test
+    public void applyDockingAndRelayout_p4() {
+        docking.applyDocking( dokzContainer, p4 );
+        checkDock_p4();
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        checkDock_p4();
+    }
+
+    @Test
+    @Ignore
+    // TODO  - Fix
+    public void applyDockingAndResize_p4() {
+        docking.applyDocking( dokzContainer, p4 );
+        checkDock_p4();
+        dokzContainer.setSize( 210, 210 );
+        dokzContainer.getLayout().layoutContainer( dokzContainer );
+        assertEquals( new Rectangle( 0, 0, 49, 105 ), p1.getBounds() );
+        assertEquals( new Rectangle( 54, 0, 51, 105 ), p2.getBounds() );
+        assertEquals( new Rectangle( 0, 110, 100, 100 ), p3.getBounds() );
+        assertEquals( new Rectangle( 110, 0, 100, 210 ), p4.getBounds() );
+    }
+
+    private void checkDock_p4() {
         assertEquals( new Rectangle( 0, 0, 22, 50 ), p1.getBounds() );
         assertEquals( new Rectangle( 27, 0, 23, 50 ), p2.getBounds() );
         assertEquals( new Rectangle( 0, 55, 50, 50 ), p3.getBounds() );
