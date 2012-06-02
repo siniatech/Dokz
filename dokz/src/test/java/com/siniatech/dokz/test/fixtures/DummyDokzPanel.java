@@ -17,13 +17,13 @@ import javax.swing.JPanel;
 import com.siniatech.dokz.DokzManager;
 import com.siniatech.dokz.DokzPanel;
 
-public class MockDokzPanel extends DokzPanel {
+public class DummyDokzPanel extends DokzPanel {
 
-    public MockDokzPanel() {
+    public DummyDokzPanel() {
         super( null, new JPanel(), "Mock Panel" );
     }
 
-    public MockDokzPanel( Rectangle rectangle ) {
+    public DummyDokzPanel( Rectangle rectangle ) {
         this();
         setBounds( rectangle );
     }

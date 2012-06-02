@@ -46,7 +46,7 @@ public class DokzPanel extends JPanel {
 
     @Override
     public String toString() {
-        return String.format( "{ DokzPanel : %s (%d) }", title, hashCode() % 1000 );
+        return String.format( "{ DokzPanel : %s (%d) x%d,y%d,w%d,h%d }", title, hashCode() % 1000, getX(), getY(), getWidth(), getHeight() );
     }
 
     public boolean isPointInButtonBar( Point p ) {

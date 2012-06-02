@@ -59,10 +59,10 @@ public class ScalingLayouter extends AbstractLayouter {
         Rectangle bounds = component.getBounds();
         int right = bounds.x + bounds.width;
         int bottom = bounds.y + bounds.height;
-        Rectangle rightBox = new Rectangle( right, bounds.y, newSize.width - right, bottom );
-        Rectangle bottomBox = new Rectangle( bounds.x, bottom, right, newSize.height - bottom );
+        Rectangle rightBox = new Rectangle( right, bounds.y, newSize.width - right, bottom - bounds.y );
+        Rectangle bottomBox = new Rectangle( bounds.x, bottom, right - bounds.x, newSize.height - bottom );
         Component compToRight = getTopLeftmostComponent( getComponentsThatIntersect( components, rightBox ) );
-        Component compToBottom = getTopLeftmostComponent( getComponentsThatIntersect( components, bottomBox ) );
+        Component compToBottom = getLeftTopmostComponent( getComponentsThatIntersect( components, bottomBox ) );
         int w = compToRight == null ? newSize.width - bounds.x : compToRight.getBounds().x - bounds.x - hGap;
         int h = compToBottom == null ? newSize.height - bounds.y : compToBottom.getBounds().y - bounds.y - vGap;
         component.setBounds( bounds.x, bounds.y, w, h );

@@ -17,7 +17,7 @@ import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
 import com.siniatech.dokz.context.DokzContext;
 import com.siniatech.dokz.context.DokzPanelContext;
-import com.siniatech.dokz.test.fixtures.MockDokzPanel;
+import com.siniatech.dokz.test.fixtures.DummyDokzPanel;
 import com.siniatech.siniautils.fn.ResponseHelper;
 
 abstract public class TestDocking {
@@ -31,10 +31,10 @@ abstract public class TestDocking {
 
     @Before
     public void init() {
-        p1 = new MockDokzPanel( new Rectangle( 0, 0, 50, 50 ) );
-        p2 = new MockDokzPanel( new Rectangle( 50 + getPanelGap(), 0, 50, 50 ) );
-        p3 = new MockDokzPanel( new Rectangle( 0, 50 + getPanelGap(), 50, 50 ) );
-        p4 = new MockDokzPanel( new Rectangle( 50 + getPanelGap(), 50 + getPanelGap(), 50, 50 ) );
+        p1 = new DummyDokzPanel( new Rectangle( 0, 0, 50, 50 ) );
+        p2 = new DummyDokzPanel( new Rectangle( 50 + getPanelGap(), 0, 50, 50 ) );
+        p3 = new DummyDokzPanel( new Rectangle( 0, 50 + getPanelGap(), 50, 50 ) );
+        p4 = new DummyDokzPanel( new Rectangle( 50 + getPanelGap(), 50 + getPanelGap(), 50, 50 ) );
         DokzContext dokzContext = new DokzContext() {
             @Override
             public int getPanelGap() {
