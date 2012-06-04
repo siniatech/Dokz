@@ -14,7 +14,7 @@ import java.awt.Rectangle;
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
 
-abstract public class CornerDocking implements IDocking {
+abstract public class CornerDocking extends AbstractDocking {
 
     @Override
     public void showPotentialPositioning( DokzContainer dokzContainer, DockingGlassPanel glassPanel, DokzPanel dockingPanel ) {

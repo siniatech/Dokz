@@ -13,7 +13,6 @@ import static com.siniatech.siniautils.swing.BoundsHelper.*;
 
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.util.Arrays;
 
 import com.siniatech.dokz.DokzContainer;
 import com.siniatech.dokz.DokzPanel;
@@ -21,7 +20,7 @@ import com.siniatech.dokz.DokzPanel;
 public class NorthWestCornerDocking extends CornerDocking {
     @Override
     protected Rectangle getDockingZone( DokzContainer dokzContainer, DokzPanel dockingPanel ) {
-        Component topLeftmostComponent = getTopLeftmostComponent( Arrays.asList( dokzContainer.getComponents() ) );
+        Component topLeftmostComponent = getTopLeftmostComponent( getPanels( dokzContainer ) );
         return topLeftmostComponent.getBounds();
     }
 }
